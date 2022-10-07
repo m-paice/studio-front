@@ -1,0 +1,19 @@
+import { getApi } from "../api";
+
+export const userResource = {
+  findMany: () => getApi().get("/users"),
+  create: (payload) => getApi().post("/users", payload),
+  findById: (id) => getApi().get(`/users/${id}`),
+  updateById: (id, payload) => getApi().put(`/users/${id}`, payload),
+  deleteById: (id) => getApi().delete(`/users/${id}`),
+
+  findByName: (name) =>
+    getApi()
+      .get(`/users/search/${name}`)
+      .then((response) => response.data),
+
+  findEmployeeByName: (name) =>
+    getApi()
+      .get(`/users/employee/${name}`)
+      .then((response) => response.data),
+};
