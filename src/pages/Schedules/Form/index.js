@@ -48,6 +48,8 @@ const initialValues = {
   date: "",
   time: "",
   isPackage: false,
+  discount: 0,
+  addition: 0,
 };
 
 export function SchedulesForm() {
@@ -86,6 +88,8 @@ export function SchedulesForm() {
         date: format(new Date(value.scheduleAt), "yyyy-MM-dd"),
         time: format(new Date(value.scheduleAt), "HH:mm"),
         isPackage: value.isPackage,
+        discount: value.discount,
+        addition: value.addition,
       });
     }
   }, [value]);
@@ -100,10 +104,10 @@ export function SchedulesForm() {
     const scheduleAt = new Date(`${fields.date} ${fields.time}`);
 
     const payload = {
+      ...fields,
       userId: fields.user.value.id,
       serviceId: fields.service.value.id,
       employeeId: fields.employee.value.id,
-      isPackage: fields.isPackage,
       scheduleAt,
     };
 
@@ -236,6 +240,37 @@ export function SchedulesForm() {
                   />
                   É uma sessão de pacote?
                 </label>
+              </GridItem>
+
+              <GridItem xs={6} sm={3} md={3}>
+                <CustomInput
+                  id="discount"
+                  labelText="Desconto"
+                  formControlProps={{
+                    fullWidth: true,
+                  }}
+                  inputProps={{
+                    type: "number",
+                    value: fields.discount,
+                    onChange: (event) =>
+                      setField("discount", event.target.value),
+                  }}
+                />
+              </GridItem>
+              <GridItem xs={6} sm={3} md={3}>
+                <CustomInput
+                  id="addition"
+                  labelText="Adicional"
+                  formControlProps={{
+                    fullWidth: true,
+                  }}
+                  inputProps={{
+                    type: "number",
+                    value: fields.addition,
+                    onChange: (event) =>
+                      setField("addition", event.target.value),
+                  }}
+                />
               </GridItem>
             </GridContainer>
           </CardBody>
