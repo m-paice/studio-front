@@ -93,7 +93,7 @@ export function ServicesForm() {
         price: service.price,
         type: options.find((item) => item.value === service.type),
         porcent: service.porcent,
-        products: [],
+        products: service.products,
       });
     }
   }, [service]);
