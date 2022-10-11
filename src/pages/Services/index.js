@@ -100,6 +100,15 @@ export function Services() {
     handleToggleOpenFilters();
   };
 
+  const formatPrice = (value = 0) => {
+    if (!value) return 0;
+
+    return value.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+  };
+
   return (
     <div>
       <div
@@ -154,10 +163,7 @@ export function Services() {
             tableHead={["Nome", "Preço", "Tipo", "Produtos", "Ações"]}
             tableData={(value || []).map((item) => [
               item.name,
-              item.price.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              }),
+              formatPrice(item.price),
               item.type === "full" ? "Integral" : "Parcial",
               item.products.length,
               <div key={item.id}>

@@ -79,6 +79,15 @@ export function Products() {
     handleChangeIsOpen();
   };
 
+  const formatPrice = (value = 0) => {
+    if (!value) return 0;
+
+    return value.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+  };
+
   return (
     <div>
       <div
@@ -108,10 +117,7 @@ export function Products() {
             tableHead={["Nome", "Preço", "Quantidade", "Categoria", "Ações"]}
             tableData={(value || []).map((item) => [
               item.name,
-              item.price.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              }),
+              formatPrice(item.price),
               item.amount,
               item.categoryId ? item.category.name : "",
               <div key={item.id}>
