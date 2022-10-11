@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export function useForm({ initialValues = {} }) {
+export function useForm({ initialValues = {}, requireds = [] }) {
   const [values, setValues] = useState(initialValues);
 
   const handleSetValue = (key, value) => {
@@ -14,5 +14,23 @@ export function useForm({ initialValues = {} }) {
     setValues(newValues);
   };
 
-  return [values, handleSetValue, handleSetAllValues];
+  const validateAllFields = () => {
+    const response = requireds.reduce((acc, cur) => {
+      if (!values[cur]) {
+        return {
+          ...acc,
+          [cur]: "required",
+        };
+      }
+
+      return acc;
+    }, {});
+
+    return {
+      isValid: Object.keys(response).length ? false : true,
+      errors: response,
+    };
+  };
+
+  return [values, handleSetValue, handleSetAllValues, validateAllFields];
 }

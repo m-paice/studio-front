@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { NavLink, useHistory, useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
@@ -41,6 +41,10 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
+const errorsMessage = {
+  required: "Campo obrigatório",
+};
+
 const initialValues = {
   user: "",
   service: "",
@@ -67,7 +71,12 @@ export function SchedulesForm() {
   );
   const { execute: findById, value } = useAsync(scheduleResource.findById);
 
-  const [fields, setField, setAllFields] = useForm(initialValues);
+  const [fields, setField, setAllFields, validateAllFields] = useForm({
+    initialValues,
+    requireds: ["user", "service", "employee", "date", "time"],
+  });
+
+  const [errors, setErrors] = useState();
 
   useEffect(() => {
     if (statusCreated === "success" || statusUpdated === "success") {
@@ -97,9 +106,12 @@ export function SchedulesForm() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (!fields.user) return;
-    if (!fields.service) return;
-    if (!fields.employee) return;
+    const validate = validateAllFields();
+
+    if (!validate.isValid) {
+      setErrors(validate.errors);
+      return;
+    }
 
     const scheduleAt = new Date(`${fields.date} ${fields.time}`);
 
@@ -176,6 +188,10 @@ export function SchedulesForm() {
                   placeholder="Pesquise um usuário"
                   defaultValue={fields.user}
                 />
+                <span style={{ fontSize: 12, color: "red" }}>
+                  {" "}
+                  {!!errors?.user && errorsMessage[errors.user]}{" "}
+                </span>
               </GridItem>
 
               <GridItem xs={12} sm={4} md={4}>
@@ -185,6 +201,10 @@ export function SchedulesForm() {
                   placeholder="Pesquise um serviço"
                   defaultValue={fields.service}
                 />
+                <span style={{ fontSize: 12, color: "red" }}>
+                  {" "}
+                  {!!errors?.service && errorsMessage[errors.service]}{" "}
+                </span>
               </GridItem>
 
               <GridItem xs={12} sm={4} md={4}>
@@ -194,6 +214,10 @@ export function SchedulesForm() {
                   placeholder="Pesquise um funcionário"
                   defaultValue={fields.employee}
                 />
+                <span style={{ fontSize: 12, color: "red" }}>
+                  {" "}
+                  {!!errors?.employee && errorsMessage[errors.employee]}{" "}
+                </span>
               </GridItem>
 
               <GridItem xs={6} sm={6} md={6}>
@@ -209,6 +233,10 @@ export function SchedulesForm() {
                     required: true,
                   }}
                 />
+                <span style={{ fontSize: 12, color: "red" }}>
+                  {" "}
+                  {!!errors?.date && errorsMessage[errors.date]}{" "}
+                </span>
               </GridItem>
 
               <GridItem xs={6} sm={6} md={6}>
@@ -224,6 +252,10 @@ export function SchedulesForm() {
                     required: true,
                   }}
                 />
+                <span style={{ fontSize: 12, color: "red" }}>
+                  {" "}
+                  {!!errors?.time && errorsMessage[errors.time]}{" "}
+                </span>
               </GridItem>
 
               <GridItem xs={6} sm={6} md={6}>
