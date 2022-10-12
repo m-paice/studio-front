@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import subDays from "date-fns/subDays";
 import addDays from "date-fns/addDays";
 import format from "date-fns/format";
@@ -21,6 +21,7 @@ import Table from "../../components/Table/Table";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import { useAsync } from "../../hooks/useAsync";
 import { useForm } from "../../hooks/useForm";
+import { useToggle } from "../../hooks/useToggle";
 import { reportsResource } from "../../services/reports";
 
 import styles from "../../assets/jss/material-dashboard-react/views/dashboardStyle.js";
@@ -39,10 +40,13 @@ export function Reports() {
 
   const [fields, setField, setAllFields] = useForm(initialValues);
 
+  const [openDetailsEntry, handleToggleOpenDetailsEntry] = useToggle();
+  const [openDetailsOut, handleToggleOpenDetailsOut] = useToggle();
+
   const handleSubmit = () => {
     const payload = {
-      startAt: new Date(fields.startAt),
-      endAt: new Date(fields.endAt),
+      startAt: fields.startAt,
+      endAt: fields.endAt,
     };
 
     execute(payload);
@@ -145,16 +149,30 @@ export function Reports() {
               ) : (
                 <Card>
                   <CardHeader color="success" stats icon>
-                    <CardIcon color="success">
+                    <CardIcon
+                      color="success"
+                      onClick={handleToggleOpenDetailsEntry}
+                    >
                       <MonetizationOn />
                     </CardIcon>
                     <p className={classes.cardCategory}>Entradas</p>
                     <h3 className={classes.cardTitle}>
-                      {formatPrice(value?.entry.total)}
+                      {formatPrice(value?.entry)}
                     </h3>
                   </CardHeader>
                   <CardFooter stats>
                     <div className={classes.stats}></div>
+
+                    {openDetailsEntry && (
+                      <Table
+                        tableHeaderColor="info"
+                        tableHead={["Serviço", "Valor"]}
+                        tableData={value?.schedulesInfo.map((item) => [
+                          item.schedule.service.name,
+                          item.schedule.service.price,
+                        ])}
+                      />
+                    )}
                   </CardFooter>
                 </Card>
               )}
@@ -168,16 +186,30 @@ export function Reports() {
               ) : (
                 <Card>
                   <CardHeader color="danger" stats icon>
-                    <CardIcon color="danger">
+                    <CardIcon
+                      color="danger"
+                      onClick={handleToggleOpenDetailsOut}
+                    >
                       <MonetizationOn />
                     </CardIcon>
                     <p className={classes.cardCategory}>Saídas</p>
                     <h3 className={classes.cardTitle}>
-                      {formatPrice(value?.out.total)}
+                      {formatPrice(value?.out)}
                     </h3>
                   </CardHeader>
                   <CardFooter stats>
                     <div className={classes.stats}></div>
+
+                    {openDetailsOut && (
+                      <Table
+                        tableHeaderColor="info"
+                        tableHead={["Funcionário", "Valor"]}
+                        tableData={value?.employeeInfo.map((item) => [
+                          item.schedule.employee.name,
+                          item.out,
+                        ])}
+                      />
+                    )}
                   </CardFooter>
                 </Card>
               )}
