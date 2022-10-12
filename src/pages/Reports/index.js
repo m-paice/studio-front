@@ -87,6 +87,20 @@ export function Reports() {
     });
   }, []);
 
+  const handleRealPrice = (total = 0, discount = 0, addition = 0) => {
+    let subtotal = total;
+
+    if (discount) {
+      subtotal -= discount;
+    }
+
+    if (addition) {
+      subtotal += addition;
+    }
+
+    return subtotal;
+  };
+
   return (
     <div>
       <GridContainer>
@@ -169,7 +183,11 @@ export function Reports() {
                         tableHead={["Serviço", "Valor"]}
                         tableData={value?.schedulesInfo.map((item) => [
                           item.schedule.service.name,
-                          item.schedule.service.price,
+                          handleRealPrice(
+                            item.schedule.service.price,
+                            item.schedule.discount,
+                            item.schedule.addition
+                          ),
                         ])}
                       />
                     )}
