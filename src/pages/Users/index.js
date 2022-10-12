@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import format from "date-fns/format";
 import { NavLink, useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Delete from "@material-ui/icons/Delete";
@@ -10,11 +11,11 @@ import Card from "../../components/Card/Card";
 import CardHeader from "../../components/Card/CardHeader";
 import CardBody from "../../components/Card/CardBody";
 import Button from "../../components/CustomButtons/Button";
+import { Modal } from "../../components/Modal";
+import { Pagination } from "../../components/Pagination";
 import { useAsync } from "../../hooks/useAsync";
 import { useToggle } from "../../hooks/useToggle";
 import { userResource } from "../../services/users";
-import { Modal } from "../../components/Modal";
-import format from "date-fns/format";
 
 const styles = {
   cardCategoryWhite: {
@@ -80,6 +81,22 @@ export function Users() {
     handleChangeIsOpen();
   };
 
+  const nextPage = () => {
+    if (value?.currentPage === value?.lastPage) return;
+
+    execute({ page: value?.currentPage + 1 });
+  };
+
+  const previousPage = () => {
+    if (value?.currentPage === 1) return;
+
+    execute({ page: value?.currentPage - 1 });
+  };
+
+  const goToPage = (page) => {
+    execute({ page });
+  };
+
   return (
     <div>
       <div
@@ -107,7 +124,7 @@ export function Users() {
           <Table
             tableHeaderColor="info"
             tableHead={["Nome", "Telefone", "Tipo", "Aniversário", "Ações"]}
-            tableData={(value || []).map((item) => [
+            tableData={(value?.data || []).map((item) => [
               item.name,
               item.cellPhone,
               item.type === "pf" ? "Cliente" : "Funcionário",
@@ -135,6 +152,15 @@ export function Users() {
                 </Button>
               </div>,
             ])}
+          />
+
+          <Pagination
+            currentPage={value?.currentPage}
+            lastPage={value?.lastPage}
+            total={value?.total}
+            nextPage={nextPage}
+            previousPage={previousPage}
+            goToPage={goToPage}
           />
         </CardBody>
 

@@ -10,6 +10,7 @@ import Card from "../../components/Card/Card";
 import CardHeader from "../../components/Card/CardHeader";
 import CardBody from "../../components/Card/CardBody";
 import Button from "../../components/CustomButtons/Button";
+import { Pagination } from "../../components/Pagination";
 import { useAsync } from "../../hooks/useAsync";
 import { useToggle } from "../../hooks/useToggle";
 import { productResource } from "../../services/products";
@@ -88,6 +89,22 @@ export function Products() {
     });
   };
 
+  const nextPage = () => {
+    if (value?.currentPage === value?.lastPage) return;
+
+    execute({ page: value?.currentPage + 1 });
+  };
+
+  const previousPage = () => {
+    if (value?.currentPage === 1) return;
+
+    execute({ page: value?.currentPage - 1 });
+  };
+
+  const goToPage = (page) => {
+    execute({ page });
+  };
+
   return (
     <div>
       <div
@@ -115,7 +132,7 @@ export function Products() {
           <Table
             tableHeaderColor="info"
             tableHead={["Nome", "Preço", "Quantidade", "Categoria", "Ações"]}
-            tableData={(value || []).map((item) => [
+            tableData={(value?.data || []).map((item) => [
               item.name,
               formatPrice(item.price),
               item.amount,
@@ -145,6 +162,15 @@ export function Products() {
                 </Button>
               </div>,
             ])}
+          />
+
+          <Pagination
+            currentPage={value?.currentPage}
+            lastPage={value?.lastPage}
+            total={value?.total}
+            nextPage={nextPage}
+            previousPage={previousPage}
+            goToPage={goToPage}
           />
         </CardBody>
 

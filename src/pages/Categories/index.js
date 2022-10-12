@@ -10,6 +10,7 @@ import Card from "../../components/Card/Card";
 import CardHeader from "../../components/Card/CardHeader";
 import CardBody from "../../components/Card/CardBody";
 import Button from "../../components/CustomButtons/Button";
+import { Pagination } from "../../components/Pagination";
 import { useAsync } from "../../hooks/useAsync";
 import { useToggle } from "../../hooks/useToggle";
 import { categoryResource } from "../../services/categories";
@@ -88,7 +89,21 @@ export function Categories() {
     handleChangeIsOpen();
   };
 
-  console.log(error);
+  const nextPage = () => {
+    if (value?.currentPage === value?.lastPage) return;
+
+    execute({ page: value?.currentPage + 1 });
+  };
+
+  const previousPage = () => {
+    if (value?.currentPage === 1) return;
+
+    execute({ page: value?.currentPage - 1 });
+  };
+
+  const goToPage = (page) => {
+    execute({ page });
+  };
 
   return (
     <div>
@@ -117,7 +132,7 @@ export function Categories() {
           <Table
             tableHeaderColor="info"
             tableHead={["Nome", "Ações"]}
-            tableData={(value || []).map((item) => [
+            tableData={(value?.data || []).map((item) => [
               item.name,
 
               <div key={item.id}>
@@ -145,6 +160,15 @@ export function Categories() {
                 </Button>
               </div>,
             ])}
+          />
+
+          <Pagination
+            currentPage={value?.currentPage}
+            lastPage={value?.lastPage}
+            total={value?.total}
+            nextPage={nextPage}
+            previousPage={previousPage}
+            goToPage={goToPage}
           />
         </CardBody>
 

@@ -1,7 +1,7 @@
 import { getApi } from "../api";
 
 export const userResource = {
-  findMany: () => getApi().get("/users"),
+  findMany: (params) => getApi().get("/users", { params }),
   create: (payload) => getApi().post("/users", payload),
   findById: (id) => getApi().get(`/users/${id}`),
   updateById: (id, payload) => getApi().put(`/users/${id}`, payload),

@@ -1,7 +1,7 @@
 import { getApi } from "../api";
 
 export const productResource = {
-  findMany: () => getApi().get("/products"),
+  findMany: (params) => getApi().get("/products", { params }),
   create: (payload) => getApi().post("/products", payload),
   findById: (id) => getApi().get(`/products/${id}`),
   updateById: (id, payload) => getApi().put(`/products/${id}`, payload),
