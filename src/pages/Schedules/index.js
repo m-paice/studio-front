@@ -12,6 +12,7 @@ import Button from "../../components/CustomButtons/Button";
 import GridItem from "../../components/Grid/GridItem";
 import GridContainer from "../../components/Grid/GridContainer";
 import { ScheduleItem } from "../../components/ScheduleItem";
+import { Skeleton } from "../../components/Skeleton";
 import { useAsync } from "../../hooks/useAsync";
 import { useToggle } from "../../hooks/useToggle";
 import { scheduleResource } from "../../services/schedules";
@@ -61,7 +62,7 @@ export function Schedules() {
 
   const [isOpenFilters, handleToggleOpenFilters] = useToggle();
 
-  const { execute, value } = useAsync(scheduleResource.findMany);
+  const { execute, value, status } = useAsync(scheduleResource.findMany);
   const { execute: changeStatus, status: statusChanged } = useAsync(
     scheduleResource.changeStatus
   );
@@ -232,7 +233,10 @@ export function Schedules() {
                   </div>
 
                   <div>
-                    {dateOfWeek.length &&
+                    {status === "pending" ? (
+                      <Skeleton lines={Math.floor(Math.random() * 10)} />
+                    ) : (
+                      dateOfWeek.length &&
                       data.hasOwnProperty(
                         format(dateOfWeek[index], "dd/MM/yyyy")
                       ) &&
@@ -244,7 +248,8 @@ export function Schedules() {
                             item={item}
                             changeStatus={changeStatus}
                           />
-                        ))}
+                        ))
+                    )}
                   </div>
                 </div>
               );

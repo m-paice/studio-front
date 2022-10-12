@@ -11,6 +11,7 @@ import CardHeader from "../../components/Card/CardHeader";
 import CardBody from "../../components/Card/CardBody";
 import Button from "../../components/CustomButtons/Button";
 import { Pagination } from "../../components/Pagination";
+import { Skeleton } from "../../components/Skeleton";
 import { useAsync } from "../../hooks/useAsync";
 import { useToggle } from "../../hooks/useToggle";
 import { productResource } from "../../services/products";
@@ -53,7 +54,7 @@ export function Products() {
 
   const history = useHistory();
 
-  const { execute, value } = useAsync(productResource.findMany);
+  const { execute, value, status } = useAsync(productResource.findMany);
   const { execute: deleteById, status: statusDelete } = useAsync(
     productResource.deleteById
   );
@@ -129,49 +130,61 @@ export function Products() {
           </p>
         </CardHeader>
         <CardBody>
-          <Table
-            tableHeaderColor="info"
-            tableHead={["Nome", "Preço", "Quantidade", "Categoria", "Ações"]}
-            tableData={(value?.data || []).map((item) => [
-              item.name,
-              formatPrice(item.price),
-              item.amount,
-              item.categoryId ? item.category.name : "",
-              <div key={item.id}>
-                <Button
-                  color="warning"
-                  justIcon={window.innerWidth > 959}
-                  simple={!(window.innerWidth > 959)}
-                  aria-label="Dashboard"
-                  className={classes.buttonLink}
-                  onClick={() =>
-                    history.push(`/admin/products/${item.id}/edit`)
-                  }
-                >
-                  <Edit className={classes.icons} />
-                </Button>
-                <Button
-                  color="danger"
-                  justIcon={window.innerWidth > 959}
-                  simple={!(window.innerWidth > 959)}
-                  aria-label="Dashboard"
-                  className={classes.buttonLink}
-                  onClick={() => handleDelete(item.id)}
-                >
-                  <Delete className={classes.icons} />
-                </Button>
-              </div>,
-            ])}
-          />
+          {status === "pending" ? (
+            <Skeleton lines={10} />
+          ) : (
+            <>
+              <Table
+                tableHeaderColor="info"
+                tableHead={[
+                  "Nome",
+                  "Preço",
+                  "Quantidade",
+                  "Categoria",
+                  "Ações",
+                ]}
+                tableData={(value?.data || []).map((item) => [
+                  item.name,
+                  formatPrice(item.price),
+                  item.amount,
+                  item.categoryId ? item.category.name : "",
+                  <div key={item.id}>
+                    <Button
+                      color="warning"
+                      justIcon={window.innerWidth > 959}
+                      simple={!(window.innerWidth > 959)}
+                      aria-label="Dashboard"
+                      className={classes.buttonLink}
+                      onClick={() =>
+                        history.push(`/admin/products/${item.id}/edit`)
+                      }
+                    >
+                      <Edit className={classes.icons} />
+                    </Button>
+                    <Button
+                      color="danger"
+                      justIcon={window.innerWidth > 959}
+                      simple={!(window.innerWidth > 959)}
+                      aria-label="Dashboard"
+                      className={classes.buttonLink}
+                      onClick={() => handleDelete(item.id)}
+                    >
+                      <Delete className={classes.icons} />
+                    </Button>
+                  </div>,
+                ])}
+              />
 
-          <Pagination
-            currentPage={value?.currentPage}
-            lastPage={value?.lastPage}
-            total={value?.total}
-            nextPage={nextPage}
-            previousPage={previousPage}
-            goToPage={goToPage}
-          />
+              <Pagination
+                currentPage={value?.currentPage}
+                lastPage={value?.lastPage}
+                total={value?.total}
+                nextPage={nextPage}
+                previousPage={previousPage}
+                goToPage={goToPage}
+              />
+            </>
+          )}
         </CardBody>
 
         <Modal

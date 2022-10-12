@@ -10,11 +10,12 @@ import Card from "../../components/Card/Card";
 import CardHeader from "../../components/Card/CardHeader";
 import CardBody from "../../components/Card/CardBody";
 import Button from "../../components/CustomButtons/Button";
+import { Modal } from "../../components/Modal";
+import { Skeleton } from "../../components/Skeleton";
 import { Pagination } from "../../components/Pagination";
 import { useAsync } from "../../hooks/useAsync";
 import { useToggle } from "../../hooks/useToggle";
 import { categoryResource } from "../../services/categories";
-import { Modal } from "../../components/Modal";
 
 const styles = {
   cardCategoryWhite: {
@@ -53,7 +54,7 @@ export function Categories() {
 
   const history = useHistory();
 
-  const { execute, value } = useAsync(categoryResource.findMany);
+  const { execute, value, status } = useAsync(categoryResource.findMany);
   const { execute: deleteById, status: statusDelete, error } = useAsync(
     categoryResource.deleteById
   );
@@ -129,47 +130,53 @@ export function Categories() {
           </p>
         </CardHeader>
         <CardBody>
-          <Table
-            tableHeaderColor="info"
-            tableHead={["Nome", "Ações"]}
-            tableData={(value?.data || []).map((item) => [
-              item.name,
+          {status === "pending" ? (
+            <Skeleton lines={10} />
+          ) : (
+            <>
+              <Table
+                tableHeaderColor="info"
+                tableHead={["Nome", "Ações"]}
+                tableData={(value?.data || []).map((item) => [
+                  item.name,
 
-              <div key={item.id}>
-                <Button
-                  color="warning"
-                  justIcon={window.innerWidth > 959}
-                  simple={!(window.innerWidth > 959)}
-                  aria-label="Dashboard"
-                  className={classes.buttonLink}
-                  onClick={() =>
-                    history.push(`/admin/categories/${item.id}/edit`)
-                  }
-                >
-                  <Edit className={classes.icons} />
-                </Button>
-                <Button
-                  color="danger"
-                  justIcon={window.innerWidth > 959}
-                  simple={!(window.innerWidth > 959)}
-                  aria-label="Dashboard"
-                  className={classes.buttonLink}
-                  onClick={() => handleDeleteUser(item.id)}
-                >
-                  <Delete className={classes.icons} />
-                </Button>
-              </div>,
-            ])}
-          />
+                  <div key={item.id}>
+                    <Button
+                      color="warning"
+                      justIcon={window.innerWidth > 959}
+                      simple={!(window.innerWidth > 959)}
+                      aria-label="Dashboard"
+                      className={classes.buttonLink}
+                      onClick={() =>
+                        history.push(`/admin/categories/${item.id}/edit`)
+                      }
+                    >
+                      <Edit className={classes.icons} />
+                    </Button>
+                    <Button
+                      color="danger"
+                      justIcon={window.innerWidth > 959}
+                      simple={!(window.innerWidth > 959)}
+                      aria-label="Dashboard"
+                      className={classes.buttonLink}
+                      onClick={() => handleDeleteUser(item.id)}
+                    >
+                      <Delete className={classes.icons} />
+                    </Button>
+                  </div>,
+                ])}
+              />
 
-          <Pagination
-            currentPage={value?.currentPage}
-            lastPage={value?.lastPage}
-            total={value?.total}
-            nextPage={nextPage}
-            previousPage={previousPage}
-            goToPage={goToPage}
-          />
+              <Pagination
+                currentPage={value?.currentPage}
+                lastPage={value?.lastPage}
+                total={value?.total}
+                nextPage={nextPage}
+                previousPage={previousPage}
+                goToPage={goToPage}
+              />
+            </>
+          )}
         </CardBody>
 
         <Modal
