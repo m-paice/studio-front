@@ -46,6 +46,30 @@ const styles = {
       lineHeight: "1",
     },
   },
+  wrapper: {
+    width: "100%",
+    height: 700,
+    overflowY: "auto",
+    background: "#eeeeee",
+    padding: 5,
+    borderRadius: 10,
+  },
+  content: {
+    fontWeight: "bold",
+    display: "flex",
+    justifyContent: "center",
+    gap: 8,
+  },
+  count: {
+    width: 20,
+    height: 20,
+    borderRadius: "50%",
+    background: "linear-gradient(60deg, #26c6da, #00acc1)",
+    color: "white",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 };
 
 const daysOfWeek = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"];
@@ -203,31 +227,22 @@ export function Schedules() {
           >
             {daysOfWeek.map((item, index) => {
               return (
-                <div
-                  key={index}
-                  style={{
-                    width: "100%",
-                    height: 700,
-                    overflowY: "auto",
-                    background: "#eeeeee",
-                    padding: 5,
-                    borderRadius: 10,
-                  }}
-                >
-                  <div
-                    style={{
-                      fontWeight: "bold",
-                      display: "flex",
-                      justifyContent: "center",
-                      gap: 8,
-                    }}
-                  >
+                <div key={index} style={styles.wrapper}>
+                  <div style={styles.content}>
                     <span> {item} </span>
                     <span>
                       {" "}
                       {dateOfWeek.length &&
                         format(dateOfWeek[index], "dd/MM")}{" "}
                     </span>
+                    {dateOfWeek.length &&
+                      data.hasOwnProperty(
+                        format(dateOfWeek[index], "dd/MM/yyyy")
+                      ) && (
+                        <span style={styles.count}>
+                          {data[format(dateOfWeek[index], "dd/MM/yyyy")].length}
+                        </span>
+                      )}
                   </div>
 
                   <div>
