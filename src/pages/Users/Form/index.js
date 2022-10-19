@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { NavLink, useHistory, useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
@@ -36,6 +36,10 @@ const styles = {
   },
 };
 
+const errorsMessage = {
+  required: "Campo obrigatório",
+};
+
 const options = [
   { value: "pf", label: "Cliente" },
   { value: "pj", label: "Funcionário" },
@@ -64,7 +68,12 @@ export function UsersForm() {
   );
   const { execute: findById, value: user } = useAsync(userResource.findById);
 
-  const [fields, setField, setAllFields] = useForm({ initialValues });
+  const [fields, setField, setAllFields, validateAllFields] = useForm({
+    initialValues,
+    requireds: ["name", "type"],
+  });
+
+  const [errors, setErrors] = useState();
 
   useEffect(() => {
     if (statusCreated === "success" || statusUpdated === "success") {
@@ -90,7 +99,12 @@ export function UsersForm() {
   }, [user]);
 
   const handleSubmit = () => {
-    if (!fields.name) return;
+    const validate = validateAllFields();
+
+    if (!validate.isValid) {
+      setErrors(validate.errors);
+      return;
+    }
 
     const payload = {
       ...fields,
@@ -145,6 +159,10 @@ export function UsersForm() {
                   onChange: (event) => setField("name", event.target.value),
                 }}
               />
+              <span style={{ fontSize: 12, color: "red" }}>
+                {" "}
+                {!!errors?.name && errorsMessage[errors.name]}{" "}
+              </span>
             </GridItem>
             <GridItem xs={12} sm={6} md={6}>
               <CustomInput
@@ -182,6 +200,10 @@ export function UsersForm() {
                 value={fields.type}
                 onChange={(val) => setField("type", val)}
               />
+              <span style={{ fontSize: 12, color: "red" }}>
+                {" "}
+                {!!errors?.type && errorsMessage[errors.type]}{" "}
+              </span>
             </GridItem>
           </GridContainer>
         </CardBody>

@@ -39,6 +39,7 @@ export function Select({ options, onChange, value, defaultValue }) {
         value={value}
         defaultValue={defaultValue}
         onChange={(val) => onChange(val)}
+        isClearable
       />
     </div>
   );

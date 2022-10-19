@@ -20,7 +20,7 @@ export function Filters({ handleSetFilters }) {
       <GridItem xs={12} sm={3} md={3}>
         <SelectAsync
           exec={userResource.findByName}
-          clickOption={({ value }) => handleSetFilters("userId", value.id)}
+          clickOption={(value) => handleSetFilters("user", value)}
           placeholder="Pesquise um usuário"
         />
       </GridItem>
@@ -28,7 +28,7 @@ export function Filters({ handleSetFilters }) {
       <GridItem xs={12} sm={3} md={3}>
         <SelectAsync
           exec={userResource.findEmployeeByName}
-          clickOption={({ value }) => handleSetFilters("employeeId", value.id)}
+          clickOption={(value) => handleSetFilters("employee", value)}
           placeholder="Pesquise um funcionário"
         />
       </GridItem>
@@ -36,7 +36,7 @@ export function Filters({ handleSetFilters }) {
       <GridItem xs={12} sm={3} md={3}>
         <SelectAsync
           exec={serviceResource.findByName}
-          clickOption={({ value }) => handleSetFilters("serviceId", value.id)}
+          clickOption={(value) => handleSetFilters("service", value)}
           placeholder="Pesquise um serviço"
         />
       </GridItem>
@@ -44,7 +44,7 @@ export function Filters({ handleSetFilters }) {
       <GridItem xs={12} sm={3} md={3}>
         <Select
           options={options}
-          onChange={({ value }) => handleSetFilters("status", value)}
+          onChange={(value) => handleSetFilters("status", value)}
         />
       </GridItem>
     </GridContainer>

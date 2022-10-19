@@ -112,15 +112,13 @@ export function Schedules() {
   useEffect(() => {
     execute({
       where: {
-        ...filters,
+        ...(filters?.user && { userId: filters.user.value.id }),
+        ...(filters?.employee && { employeeId: filters.employee.value.id }),
+        ...(filters?.service && { serviceId: filters.service.value.id }),
+        ...(filters?.status && { status: filters.status.value }),
       },
     });
-  }, [
-    filters?.userId,
-    filters?.employeeId,
-    filters?.status,
-    filters?.serviceId,
-  ]);
+  }, [filters?.user, filters?.employee, filters?.status, filters?.service]);
 
   const handleSetFilters = (key, value) => {
     setFilters((prevState) => ({

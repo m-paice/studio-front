@@ -70,8 +70,9 @@ export function Services() {
   useEffect(() => {
     execute({
       where: {
-        ...filters,
         ...(filters?.name && { name: { $like: `%${filters.name}%` } }),
+        ...(filters?.type && { type: filters.type.value }),
+        ...(filters?.price && { price: filters.price }),
       },
     });
   }, [filters?.type, filters?.name, filters?.price]);

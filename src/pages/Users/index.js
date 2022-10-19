@@ -9,6 +9,8 @@ import AddCircle from "@material-ui/icons/AddCircle";
 import Table from "../../components/Table/Table";
 import Card from "../../components/Card/Card";
 import CardHeader from "../../components/Card/CardHeader";
+import GridItem from "../../components/Grid/GridItem";
+
 import CardBody from "../../components/Card/CardBody";
 import Button from "../../components/CustomButtons/Button";
 import { Modal } from "../../components/Modal";
@@ -17,6 +19,7 @@ import { Pagination } from "../../components/Pagination";
 import { useAsync } from "../../hooks/useAsync";
 import { useToggle } from "../../hooks/useToggle";
 import { userResource } from "../../services/users";
+import { Filters } from "./Filters";
 
 const styles = {
   cardCategoryWhite: {
@@ -61,12 +64,19 @@ export function Users() {
   );
 
   const [isOpen, handleChangeIsOpen] = useToggle();
+  const [isOpenFilters, handleToggleOpenFilters] = useToggle();
 
   const [userId, setUserId] = useState("");
+  const [filters, setFilters] = useState();
 
   useEffect(() => {
-    execute();
-  }, []);
+    execute({
+      where: {
+        ...(filters?.name && { name: { $like: `%${filters.name}%` } }),
+        ...(filters?.phone && { cellPhone: { $like: `%${filters.phone}%` } }),
+      },
+    });
+  }, [filters?.name, filters?.phone]);
 
   useEffect(() => {
     if (statusDelete === "success") execute();
@@ -98,6 +108,18 @@ export function Users() {
     execute({ page });
   };
 
+  const handleSetFilters = (key, value) => {
+    setFilters((prevState) => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+
+  const handleClearFilters = () => {
+    setFilters({});
+    handleToggleOpenFilters();
+  };
+
   return (
     <div>
       <div
@@ -120,8 +142,33 @@ export function Users() {
           <p className={classes.cardCategoryWhite}>
             acompanhe todos os seus usuários por aqui.
           </p>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+            }}
+          >
+            <GridItem xs={12} sm={12} md={12}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Button onClick={handleClearFilters}>
+                  {" "}
+                  {isOpenFilters ? "Fechar" : "Abrir"} filtros{" "}
+                </Button>
+              </div>{" "}
+            </GridItem>
+          </div>
         </CardHeader>
         <CardBody>
+          {isOpenFilters && <Filters handleSetFilters={handleSetFilters} />}
+
           {status === "pending" ? (
             <Skeleton lines={10} />
           ) : (

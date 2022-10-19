@@ -49,6 +49,7 @@ export function SelectAsync({ exec, clickOption, ...rest }) {
         noOptionsMessage={() => <p> Nenhum registro encontrado </p>}
         onChange={(value) => clickOption(value)}
         defaultValue={rest.defaultValue}
+        isClearable
       />
     </div>
   );
