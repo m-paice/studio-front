@@ -181,7 +181,7 @@ export function Reports() {
                       <Table
                         tableHeaderColor="info"
                         tableHead={["Serviço", "Valor"]}
-                        tableData={value?.schedulesInfo.map((item) => [
+                        tableData={(value?.schedulesInfo || []).map((item) => [
                           item.schedule.service.name,
                           handleRealPrice(
                             item.schedule.service.price,
@@ -222,8 +222,8 @@ export function Reports() {
                       <Table
                         tableHeaderColor="info"
                         tableHead={["Funcionário", "Valor"]}
-                        tableData={value?.employeeInfo.map((item) => [
-                          item.schedule.employee.name,
+                        tableData={(value?.employeeInfo || []).map((item) => [
+                          `${item.schedule.employee.name} (${item.schedule.service.name})`,
                           item.out,
                         ])}
                       />
