@@ -14,6 +14,7 @@ import { useForm } from "../../hooks/useForm";
 import { userResource } from "../../services/users";
 
 import logo from "../../assets/img/logo.png";
+import { maskTextCellPhone } from "../../hooks/maskText";
 
 const initialValues = {
   username: "",
@@ -42,12 +43,17 @@ export function Login() {
     }
   }, [value]);
 
-  const invalidCredentials = error?.response?.data.includes("credentials");
+  const invalidCredentials = error?.response?.data?.includes("credentials");
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    execute(fields);
+    const payload = {
+      username: fields.username.replace(/[^\d]/g, ""),
+      password: fields.password,
+    };
+
+    execute(payload);
   };
 
   return (
@@ -74,7 +80,8 @@ export function Login() {
               type: "text",
               placeholder: "Digite seu usuário",
               value: fields.username,
-              onChange: (event) => setField("username", event.target.value),
+              onChange: (event) =>
+                setField("username", maskTextCellPhone(event.target.value)),
             }}
           />
           <CustomInput

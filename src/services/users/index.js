@@ -2,6 +2,7 @@ import { getApi } from "../api";
 
 export const userResource = {
   auth: (payload) => getApi().post("/auth", payload),
+  resetPassword: (payload) => getApi().post("/auth/reset-password", payload),
 
   findMany: (params) => getApi().get("/users", { params }),
   create: (payload) => getApi().post("/users", payload),

@@ -121,17 +121,17 @@ export default function AdminNavbarLinks() {
                   <ClickAwayListener onClickAway={handleCloseProfile}>
                     <MenuList role="menu">
                       <MenuItem
-                        onClick={handleCloseProfile}
+                        onClick={() => history.push("/profile")}
                         className={classes.dropdownItem}
                       >
                         Perfil
                       </MenuItem>
-                      <MenuItem
+                      {/* <MenuItem
                         onClick={handleCloseProfile}
                         className={classes.dropdownItem}
                       >
                         Configurações
-                      </MenuItem>
+                      </MenuItem> */}
                       <Divider light />
                       <MenuItem
                         onClick={() => history.push("/login")}

@@ -27,6 +27,7 @@ import { UsersAdmin } from "./pages/UsersAdmin";
 import { UsersAdminForm } from "./pages/UsersAdmin/Form";
 import { Sales } from "./pages/Sales";
 import { SalesForm } from "./pages/Sales/Form";
+import { Profile } from "./pages/Profile/index.js";
 
 export const subs = [
   { path: "/users/create", component: UsersForm, name: "Novo usuário" },
@@ -200,6 +201,16 @@ const dashboardRoutes = [
     component: Categories,
     layout: "/categories",
     permission: "all",
+  },
+
+  {
+    path: "/profile",
+    name: "Profile",
+    rtlName: "الرموز",
+    icon: Category,
+    component: Profile,
+    layout: "/profile",
+    permission: "",
   },
 ];
 
