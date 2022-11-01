@@ -89,8 +89,8 @@ export function Profile() {
             tabContent: (
               <GridContainer>
                 <GridItem xs={12} sm={6} md={6}>
-                  <h4> Nome da conta: Brother Store </h4>
-                  <h4> Atividade: Vendas </h4>
+                  <h4> Nome da conta: {user?.account?.name} </h4>
+                  <h4> Atividade: {user?.account?.type} </h4>
                 </GridItem>
               </GridContainer>
             ),

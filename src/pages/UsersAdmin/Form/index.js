@@ -66,7 +66,7 @@ export function UsersAdminForm() {
 
   const [fields, setField, setAllFields, validateAllFields] = useForm({
     initialValues,
-    requireds: ["name", "cellPhone", "password", "account"],
+    requireds: ["name", "cellPhone", "account"],
   });
 
   const [errors, setErrors] = useState();
@@ -189,7 +189,7 @@ export function UsersAdminForm() {
               />
               <span style={{ fontSize: 12, color: "red" }}>
                 {" "}
-                {!!errors?.name && errorsMessage[errors.name]}{" "}
+                {!!errors?.account && errorsMessage[errors.account]}{" "}
               </span>
             </GridItem>
 
@@ -208,7 +208,7 @@ export function UsersAdminForm() {
               />
               <span style={{ fontSize: 12, color: "red" }}>
                 {" "}
-                {!!errors?.name && errorsMessage[errors.name]}{" "}
+                {!!errors?.cellPhone && errorsMessage[errors.cellPhone]}{" "}
               </span>
             </GridItem>
 
@@ -224,10 +224,6 @@ export function UsersAdminForm() {
                   onChange: (event) => setField("password", event.target.value),
                 }}
               />
-              <span style={{ fontSize: 12, color: "red" }}>
-                {" "}
-                {!!errors?.name && errorsMessage[errors.name]}{" "}
-              </span>
             </GridItem>
           </GridContainer>
         </CardBody>
