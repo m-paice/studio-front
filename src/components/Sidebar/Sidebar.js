@@ -16,6 +16,7 @@ import AdminNavbarLinks from "../Navbars/AdminNavbarLinks.js";
 import RTLNavbarLinks from "../Navbars/RTLNavbarLinks.js";
 
 import styles from "../../assets/jss/material-dashboard-react/components/sidebarStyle";
+import { useAuthContext } from "../../context/Auth.js";
 
 const useStyles = makeStyles(styles);
 
@@ -23,13 +24,39 @@ export default function Sidebar(props) {
   const classes = useStyles();
   let location = useLocation();
   // verifies if routeName is the one active (in browser input)
+
+  const { user } = useAuthContext();
+
   function activeRoute(routeName) {
-    return location.pathname === routeName;
+    return location.pathname.includes(routeName);
   }
   const { color, logo, image, logoText, routes } = props;
+
+  function handleFilterRoutes() {
+    const superadmin = user.isSuperAdmin;
+
+    if (superadmin) {
+      return routes.filter((item) => item.permission === "superadmin");
+    }
+
+    if (user?.account?.type === "sales") {
+      return routes.filter(
+        (item) => item.permission === "sales" || item.permission === "all"
+      );
+    }
+
+    if (user?.account?.type === "schedules") {
+      return routes.filter(
+        (item) => item.permission === "schedules" || item.permission === "all"
+      );
+    }
+
+    return [];
+  }
+
   var links = (
     <List className={classes.list}>
-      {routes.map((prop, key) => {
+      {handleFilterRoutes().map((prop, key) => {
         var activePro = " ";
         var listItemClasses;
         if (prop.path === "/upgrade-to-pro") {
@@ -39,15 +66,15 @@ export default function Sidebar(props) {
           });
         } else {
           listItemClasses = classNames({
-            [" " + classes[color]]: activeRoute(prop.layout + prop.path),
+            [" " + classes[color]]: activeRoute(prop.path),
           });
         }
         const whiteFontClasses = classNames({
-          [" " + classes.whiteFont]: activeRoute(prop.layout + prop.path),
+          [" " + classes.whiteFont]: activeRoute(prop.path),
         });
         return (
           <NavLink
-            to={prop.layout + prop.path}
+            to={prop.path}
             className={activePro + classes.item}
             activeClassName="active"
             key={key}
@@ -84,16 +111,13 @@ export default function Sidebar(props) {
   var brand = (
     <div className={classes.logo}>
       <a
-        href="https://www.creative-tim.com?ref=mdr-sidebar"
+        href=""
         className={classNames(classes.logoLink, {
           [classes.logoLinkRTL]: props.rtlActive,
         })}
         target="_blank"
       >
-        <div className={classes.logoImage}>
-          <img src={logo} alt="logo" className={classes.img} />
-        </div>
-        {logoText}
+        {logoText || "Admin"}
       </a>
     </div>
   );

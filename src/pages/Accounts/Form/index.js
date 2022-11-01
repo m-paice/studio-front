@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 
 import { NavLink, useHistory, useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import Delete from "@material-ui/icons/Delete";
 
 import GridItem from "../../../components/Grid/GridItem";
 import GridContainer from "../../../components/Grid/GridContainer";
@@ -10,14 +9,12 @@ import CustomInput from "../../../components/CustomInput/CustomInput";
 import Button from "../../../components/CustomButtons/Button";
 import Card from "../../../components/Card/Card";
 import CardHeader from "../../../components/Card/CardHeader";
-import Table from "../../../components/Table/Table";
 import CardBody from "../../../components/Card/CardBody";
 import CardFooter from "../../../components/Card/CardFooter";
 import { useAsync } from "../../../hooks/useAsync";
 import { useForm } from "../../../hooks/useForm";
-import { categoryResource } from "../../../services/categories";
-import { productResource } from "../../../services/products";
-import { SelectAsync } from "../../../components/CustomInput/SelectAsync";
+import { accountResource } from "../../../services/accounts";
+import { Select } from "../../../components/CustomInput/Select.js";
 
 const styles = {
   cardCategoryWhite: {
@@ -40,30 +37,35 @@ const styles = {
 
 const initialValues = {
   name: "",
-  products: [],
+  type: "",
 };
+
+const options = [
+  { value: "schedules", label: "Agendamento" },
+  { value: "sales", label: "Vendas" },
+];
 
 const useStyles = makeStyles(styles);
 
-export function CategoriesForm() {
+export function AccountsForm() {
   const classes = useStyles();
 
   const history = useHistory();
   const { id } = useParams();
 
   const { execute: create, status: statusCreated } = useAsync(
-    categoryResource.create
+    accountResource.create
   );
   const { execute: updateById, status: statusUpdated } = useAsync(
-    categoryResource.updateById
+    accountResource.updateById
   );
-  const { execute: findById, value } = useAsync(categoryResource.findById);
+  const { execute: findById, value } = useAsync(accountResource.findById);
 
   const [fields, setField, setAllFields] = useForm({ initialValues });
 
   useEffect(() => {
     if (statusCreated === "success" || statusUpdated === "success") {
-      history.push("/categories");
+      history.push("/accounts");
     }
   }, [statusCreated, statusUpdated]);
 
@@ -75,7 +77,7 @@ export function CategoriesForm() {
     if (value) {
       setAllFields({
         name: value.name,
-        products: [],
+        type: options.find((item) => item.value === value.type),
       });
     }
   }, [value]);
@@ -85,7 +87,7 @@ export function CategoriesForm() {
 
     const payload = {
       ...fields,
-      products: fields.products.map((item) => item.id),
+      type: fields.type.value,
     };
 
     if (id) {
@@ -93,19 +95,6 @@ export function CategoriesForm() {
     }
 
     create(payload);
-  };
-
-  const handleAddProduct = (product) => {
-    if (fields.products.find((item) => item.id === product.id)) return;
-
-    setField("products", [...fields.products, product]);
-  };
-
-  const handleRemoveProduct = (productId) => {
-    setField(
-      "products",
-      fields.products.filter((item) => item.id !== productId)
-    );
   };
 
   const isEditing = !!id;
@@ -119,18 +108,18 @@ export function CategoriesForm() {
           justifyContent: "space-between",
         }}
       >
-        <h4> {isEditing ? "Atualizar" : "Novo"} Categoria </h4>
-        <NavLink to="/categories">
+        <h4> {isEditing ? "Atualizar" : "Novo"} Conta </h4>
+        <NavLink to="/accounts">
           <Button color="info">Voltar</Button>
         </NavLink>
       </div>
       <Card>
         <CardHeader color="info">
           <h4 className={classes.cardTitleWhite}>
-            {isEditing ? "Atualizando" : "Criando"} categoria
+            {isEditing ? "Atualizando" : "Criando"} conta
           </h4>
           <p className={classes.cardCategoryWhite}>
-            Preencha os dados do categoria
+            Preencha os dados do conta
           </p>
         </CardHeader>
         <CardBody>
@@ -151,41 +140,13 @@ export function CategoriesForm() {
             </GridItem>
 
             <GridItem xs={12} sm={6} md={6}>
-              <SelectAsync
-                exec={productResource.findByName}
-                clickOption={({ value }) => handleAddProduct(value)}
-                placeholder="Pesquise um produto"
+              <Select
+                options={options}
+                value={fields.type}
+                onChange={(val) => setField("type", val)}
               />
             </GridItem>
           </GridContainer>
-          {fields.products.length > 0 && (
-            <GridContainer>
-              <GridItem xs={12} sm={12} md={12}>
-                <Card>
-                  <Table
-                    tableHeaderColor="info"
-                    tableHead={["Nome", "Ações"]}
-                    tableData={fields.products.map((item) => [
-                      item.name,
-
-                      <div key={item.id}>
-                        <Button
-                          color="danger"
-                          justIcon={window.innerWidth > 959}
-                          simple={!(window.innerWidth > 959)}
-                          aria-label="Dashboard"
-                          className={classes.buttonLink}
-                          onClick={() => handleRemoveProduct(item.id)}
-                        >
-                          <Delete className={classes.icons} />
-                        </Button>
-                      </div>,
-                    ])}
-                  />
-                </Card>
-              </GridItem>
-            </GridContainer>
-          )}
         </CardBody>
         <CardFooter>
           <Button color="info" onClick={handleSubmit}>

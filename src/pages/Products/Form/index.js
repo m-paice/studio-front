@@ -66,7 +66,7 @@ export function ProductsForm() {
 
   useEffect(() => {
     if (statusCreated === "success" || statusUpdated === "success") {
-      history.push("/admin/products");
+      history.push("/products");
     }
   }, [statusCreated, statusUpdated]);
 
@@ -134,7 +134,7 @@ export function ProductsForm() {
         }}
       >
         <h4> {isEditing ? "Atualizar" : "Novo"} Produto </h4>
-        <NavLink to="/admin/products">
+        <NavLink to="/products">
           <Button color="info">Voltar</Button>
         </NavLink>
       </div>

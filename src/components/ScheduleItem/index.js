@@ -39,7 +39,7 @@ export function ScheduleItem({ item, changeStatus }) {
           </div>
           <Edit
             style={{ cursor: "pointer", color: "#ff9800" }}
-            onClick={() => history.push(`/admin/schedules/${item.id}/edit`)}
+            onClick={() => history.push(`/schedules/${item.id}/edit`)}
           />
         </div>
 

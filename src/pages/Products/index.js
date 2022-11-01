@@ -116,7 +116,7 @@ export function Products() {
         }}
       >
         <h4> Produtos </h4>
-        <NavLink to="/admin/products/create">
+        <NavLink to="/products/create">
           <Button color="info">
             <AddCircle className={classes.icons} /> novo produto
           </Button>
@@ -155,9 +155,7 @@ export function Products() {
                       simple={!(window.innerWidth > 959)}
                       aria-label="Dashboard"
                       className={classes.buttonLink}
-                      onClick={() =>
-                        history.push(`/admin/products/${item.id}/edit`)
-                      }
+                      onClick={() => history.push(`/products/${item.id}/edit`)}
                     >
                       <Edit className={classes.icons} />
                     </Button>

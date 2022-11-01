@@ -53,7 +53,7 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-export function Users() {
+export function UsersAdmin() {
   const classes = useStyles();
 
   const history = useHistory();
@@ -73,10 +73,10 @@ export function Users() {
     execute({
       where: {
         ...(filters?.name && { name: { $like: `%${filters.name}%` } }),
-        ...(filters?.phone && { cellPhone: { $like: `%${filters.phone}%` } }),
+        ...(filters?.account && { accountId: filters.account.value.id }),
       },
     });
-  }, [filters?.name, filters?.phone]);
+  }, [filters?.name, filters?.account]);
 
   useEffect(() => {
     if (statusDelete === "success") execute();
@@ -130,7 +130,7 @@ export function Users() {
         }}
       >
         <h4> Usuários </h4>
-        <NavLink to="/users/create">
+        <NavLink to="/useradmin/create">
           <Button color="info">
             <AddCircle className={classes.icons} /> novo usuário
           </Button>
@@ -175,12 +175,11 @@ export function Users() {
             <>
               <Table
                 tableHeaderColor="info"
-                tableHead={["Nome", "Telefone", "Tipo", "Aniversário", "Ações"]}
+                tableHead={["Nome", "Telefone", "Conta", "Ações"]}
                 tableData={(value?.data || []).map((item) => [
                   item.name,
                   item.cellPhone,
-                  item.type === "pf" ? "Cliente" : "Funcionário",
-                  format(new Date(item.birthDate), "dd / MMMM"),
+                  item?.account?.name,
                   <div key={item.id}>
                     <Button
                       color="warning"
@@ -188,7 +187,7 @@ export function Users() {
                       simple={!(window.innerWidth > 959)}
                       aria-label="Dashboard"
                       className={classes.buttonLink}
-                      onClick={() => history.push(`/users/${item.id}/edit`)}
+                      onClick={() => history.push(`/useradmin/${item.id}/edit`)}
                     >
                       <Edit className={classes.icons} />
                     </Button>

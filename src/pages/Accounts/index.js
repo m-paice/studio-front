@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import format from "date-fns/format";
 import { NavLink, useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Delete from "@material-ui/icons/Delete";
@@ -9,16 +8,15 @@ import AddCircle from "@material-ui/icons/AddCircle";
 import Table from "../../components/Table/Table";
 import Card from "../../components/Card/Card";
 import CardHeader from "../../components/Card/CardHeader";
-import GridItem from "../../components/Grid/GridItem";
-
 import CardBody from "../../components/Card/CardBody";
+import GridItem from "../../components/Grid/GridItem";
 import Button from "../../components/CustomButtons/Button";
 import { Modal } from "../../components/Modal";
 import { Skeleton } from "../../components/Skeleton";
 import { Pagination } from "../../components/Pagination";
 import { useAsync } from "../../hooks/useAsync";
 import { useToggle } from "../../hooks/useToggle";
-import { userResource } from "../../services/users";
+import { accountResource } from "../../services/accounts";
 import { Filters } from "./Filters";
 
 const styles = {
@@ -53,34 +51,47 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-export function Users() {
+export function Accounts() {
   const classes = useStyles();
 
   const history = useHistory();
 
-  const { execute, value, status } = useAsync(userResource.findMany);
-  const { execute: deleteById, status: statusDelete } = useAsync(
-    userResource.deleteById
+  const { execute, value, status } = useAsync(accountResource.findMany);
+  const { execute: deleteById, status: statusDelete, error } = useAsync(
+    accountResource.deleteById
   );
 
   const [isOpen, handleChangeIsOpen] = useToggle();
-  const [isOpenFilters, handleToggleOpenFilters] = useToggle();
+  const [isOpenError, handleChangeIsOpenError] = useToggle();
 
   const [userId, setUserId] = useState("");
-  const [filters, setFilters] = useState();
+  const [filters, setFilters] = useState({});
+
+  const [isOpenFilters, handleToggleOpenFilters] = useToggle();
+
+  useEffect(() => {
+    execute();
+  }, []);
+
+  useEffect(() => {
+    if (statusDelete === "success") execute();
+  }, [statusDelete]);
+
+  useEffect(() => {
+    if (
+      error &&
+      error.response.data.name === "SequelizeForeignKeyConstraintError"
+    )
+      handleChangeIsOpenError();
+  }, [error]);
 
   useEffect(() => {
     execute({
       where: {
         ...(filters?.name && { name: { $like: `%${filters.name}%` } }),
-        ...(filters?.phone && { cellPhone: { $like: `%${filters.phone}%` } }),
       },
     });
-  }, [filters?.name, filters?.phone]);
-
-  useEffect(() => {
-    if (statusDelete === "success") execute();
-  }, [statusDelete]);
+  }, [filters?.name]);
 
   const handleDeleteUser = (valueUserId) => {
     setUserId(valueUserId);
@@ -129,18 +140,18 @@ export function Users() {
           justifyContent: "space-between",
         }}
       >
-        <h4> Usuários </h4>
-        <NavLink to="/users/create">
+        <h4> Contas </h4>
+        <NavLink to="/accounts/create">
           <Button color="info">
-            <AddCircle className={classes.icons} /> novo usuário
+            <AddCircle className={classes.icons} /> nova conta
           </Button>
         </NavLink>
       </div>
       <Card>
         <CardHeader color="info">
-          <h4 className={classes.cardTitleWhite}>Lista de Usuários</h4>
+          <h4 className={classes.cardTitleWhite}>Lista de Contas</h4>
           <p className={classes.cardCategoryWhite}>
-            acompanhe todos os seus usuários por aqui.
+            acompanhe todos os suas contas por aqui.
           </p>
 
           <div
@@ -162,7 +173,7 @@ export function Users() {
                   {" "}
                   {isOpenFilters ? "Fechar" : "Abrir"} filtros{" "}
                 </Button>
-              </div>{" "}
+              </div>
             </GridItem>
           </div>
         </CardHeader>
@@ -175,12 +186,10 @@ export function Users() {
             <>
               <Table
                 tableHeaderColor="info"
-                tableHead={["Nome", "Telefone", "Tipo", "Aniversário", "Ações"]}
+                tableHead={["Nome", "Tipo", "Ações"]}
                 tableData={(value?.data || []).map((item) => [
                   item.name,
-                  item.cellPhone,
-                  item.type === "pf" ? "Cliente" : "Funcionário",
-                  format(new Date(item.birthDate), "dd / MMMM"),
+                  item.type === "sales" ? "Vendas" : "Agendamentos",
                   <div key={item.id}>
                     <Button
                       color="warning"
@@ -188,7 +197,7 @@ export function Users() {
                       simple={!(window.innerWidth > 959)}
                       aria-label="Dashboard"
                       className={classes.buttonLink}
-                      onClick={() => history.push(`/users/${item.id}/edit`)}
+                      onClick={() => history.push(`/accounts/${item.id}/edit`)}
                     >
                       <Edit className={classes.icons} />
                     </Button>
@@ -222,10 +231,20 @@ export function Users() {
           type="warning"
           onCancel={handleChangeIsOpen}
           onConfirm={handleSubmitDelete}
-          title="Deseja excluir esse item ?"
+          title="Deseja excluir esse item?"
           show={isOpen}
         >
           Cuidado! Não sera possível reverter essa ação!
+        </Modal>
+
+        <Modal
+          type="error"
+          onCancel={handleChangeIsOpenError}
+          onConfirm={handleChangeIsOpenError}
+          title="Não foi possível excluir!"
+          show={isOpenError}
+        >
+          Esse item tem produtos vinculados
         </Modal>
       </Card>
     </div>

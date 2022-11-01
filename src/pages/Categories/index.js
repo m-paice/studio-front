@@ -116,7 +116,7 @@ export function Categories() {
         }}
       >
         <h4> Categorias </h4>
-        <NavLink to="/admin/categories/create">
+        <NavLink to="/categories/create">
           <Button color="info">
             <AddCircle className={classes.icons} /> nova categoria
           </Button>
@@ -148,7 +148,7 @@ export function Categories() {
                       aria-label="Dashboard"
                       className={classes.buttonLink}
                       onClick={() =>
-                        history.push(`/admin/categories/${item.id}/edit`)
+                        history.push(`/categories/${item.id}/edit`)
                       }
                     >
                       <Edit className={classes.icons} />

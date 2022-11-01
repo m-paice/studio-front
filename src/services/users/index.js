@@ -1,6 +1,8 @@
 import { getApi } from "../api";
 
 export const userResource = {
+  auth: (payload) => getApi().post("/auth", payload),
+
   findMany: (params) => getApi().get("/users", { params }),
   create: (payload) => getApi().post("/users", payload),
   findById: (id) => getApi().get(`/users/${id}`),

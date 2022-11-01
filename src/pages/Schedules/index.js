@@ -166,7 +166,7 @@ export function Schedules() {
         }}
       >
         <h4> Agendamentos </h4>
-        <NavLink to="/admin/schedules/create">
+        <NavLink to="/schedules/create">
           <Button color="info">
             <AddCircle className={classes.icons} /> novo agendamento
           </Button>

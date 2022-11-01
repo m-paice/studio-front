@@ -23,6 +23,7 @@ import { useAsync } from "../../hooks/useAsync";
 import { useForm } from "../../hooks/useForm";
 import { useToggle } from "../../hooks/useToggle";
 import { reportsResource } from "../../services/reports";
+import { useAuthContext } from "../../context/Auth";
 
 import styles from "../../assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
@@ -37,6 +38,8 @@ export function Reports() {
   const classes = useStyles();
 
   const { execute, value, status } = useAsync(reportsResource.reports);
+
+  const { user } = useAuthContext();
 
   const [fields, setField, setAllFields] = useForm(initialValues);
 
@@ -61,6 +64,8 @@ export function Reports() {
     });
   };
 
+  const isSaleAccount = user.account.type === "sales";
+
   useEffect(() => {
     const currentDate = new Date();
 
@@ -79,7 +84,11 @@ export function Reports() {
       ),
     ];
 
-    execute({ startAt: response[0], endAt: response[6] });
+    execute({
+      startAt: response[0],
+      endAt: response[6],
+      type: isSaleAccount ? "sales" : "schedules",
+    });
 
     setAllFields({
       startAt: format(response[0], "yyyy-MM-dd"),

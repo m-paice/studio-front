@@ -4,7 +4,9 @@ import CalendarToday from "@material-ui/icons/CalendarToday";
 import Category from "@material-ui/icons/Category";
 import Person from "@material-ui/icons/Person";
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
+import Store from "@material-ui/icons/Store";
 import BubbleChart from "@material-ui/icons/BubbleChart";
+import AccountBalance from "@material-ui/icons/AccountBalance";
 
 import DashboardPage from "./views/Dashboard/Dashboard.js";
 import { Reports } from "./pages/Reports";
@@ -18,6 +20,13 @@ import { Products } from "./pages/Products";
 import { ProductsForm } from "./pages/Products/Form";
 import { Categories } from "./pages/Categories";
 import { CategoriesForm } from "./pages/Categories/Form";
+import { Login } from "./pages/Login";
+import { Accounts } from "./pages/Accounts";
+import { AccountsForm } from "./pages/Accounts/Form";
+import { UsersAdmin } from "./pages/UsersAdmin";
+import { UsersAdminForm } from "./pages/UsersAdmin/Form";
+import { Sales } from "./pages/Sales";
+import { SalesForm } from "./pages/Sales/Form";
 
 export const subs = [
   { path: "/users/create", component: UsersForm, name: "Novo usuário" },
@@ -62,16 +71,72 @@ export const subs = [
     component: CategoriesForm,
     name: "Atualizar produto",
   },
+
+  {
+    path: "/accounts/create",
+    component: AccountsForm,
+    name: "Atualizar conta",
+  },
+  {
+    path: "/accounts/:id/edit",
+    component: AccountsForm,
+    name: "Atualizar conta",
+  },
+  {
+    path: "/useradmin/create",
+    component: UsersAdminForm,
+    name: "Atualizar usuário",
+  },
+  {
+    path: "/useradmin/:id/edit",
+    component: UsersAdminForm,
+    name: "Atualizar usuário",
+  },
+
+  {
+    path: "/sales/create",
+    component: SalesForm,
+    name: "Atualizar vendas",
+  },
+  {
+    path: "/sales/:id/edit",
+    component: SalesForm,
+    name: "Atualizar vendas",
+  },
 ];
 
+export const routeLogin = {
+  path: "/login",
+  component: Login,
+};
+
 const dashboardRoutes = [
+  {
+    path: "/accounts",
+    name: "Conta",
+    rtlName: "لوحة القيادة",
+    icon: AccountBalance,
+    component: Accounts,
+    layout: "/accounts",
+    permission: "superadmin",
+  },
+  {
+    path: "/useradmin",
+    name: "Usuários",
+    rtlName: "لوحة القيادة",
+    icon: Person,
+    component: UsersAdmin,
+    layout: "/useradmin",
+    permission: "superadmin",
+  },
   {
     path: "/dashboard",
     name: "Dashboard",
     rtlName: "لوحة القيادة",
     icon: Dashboard,
     component: DashboardPage,
-    layout: "/admin",
+    layout: "/dashboard",
+    permission: "all",
   },
   {
     path: "/reports",
@@ -79,7 +144,8 @@ const dashboardRoutes = [
     rtlName: "قائمة الجدول",
     icon: MonetizationOn,
     component: Reports,
-    layout: "/admin",
+    layout: "/reports",
+    permission: "all",
   },
   {
     path: "/schedules",
@@ -87,7 +153,8 @@ const dashboardRoutes = [
     rtlName: "قائمة الجدول",
     icon: CalendarToday,
     component: Schedules,
-    layout: "/admin",
+    layout: "/schedules",
+    permission: "schedules",
   },
   {
     path: "/services",
@@ -95,7 +162,17 @@ const dashboardRoutes = [
     rtlName: "طباعة",
     icon: LibraryBooks,
     component: Services,
-    layout: "/admin",
+    layout: "/services",
+    permission: "schedules",
+  },
+  {
+    path: "/sales",
+    name: "Vendas",
+    rtlName: "طباعة",
+    icon: Store,
+    component: Sales,
+    layout: "/sales",
+    permission: "sales",
   },
   {
     path: "/users",
@@ -103,7 +180,8 @@ const dashboardRoutes = [
     rtlName: "ملف تعريفي للمستخدم",
     icon: Person,
     component: Users,
-    layout: "/admin",
+    layout: "/users",
+    permission: "all",
   },
   {
     path: "/products",
@@ -111,7 +189,8 @@ const dashboardRoutes = [
     rtlName: "الرموز",
     icon: BubbleChart,
     component: Products,
-    layout: "/admin",
+    layout: "/products",
+    permission: "all",
   },
   {
     path: "/categories",
@@ -119,7 +198,8 @@ const dashboardRoutes = [
     rtlName: "الرموز",
     icon: Category,
     component: Categories,
-    layout: "/admin",
+    layout: "/categories",
+    permission: "all",
   },
 ];
 

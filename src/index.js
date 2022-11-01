@@ -2,16 +2,54 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
-// core components
-import Admin from "./layouts/Admin.js";
+import routes, { subs } from "./routes";
+import Admin from "./layouts/Admin";
+import { LayoutLogin } from "./layouts/Login";
 
 import "./assets/css/material-dashboard-react.css";
+import { AuthContextProvider } from "./context/Auth";
 
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
-      <Route path="/" component={Admin} />
-      <Redirect from="/" to="/admin/dashboard" />
+      <AuthContextProvider>
+        <Redirect from="/" to="/login" />
+        <Route exact path="/login" component={LayoutLogin} />
+        {routes.map((prop, key) => {
+          const Component = prop.component;
+
+          return (
+            <Route
+              exact
+              path={prop.path}
+              render={(routeProps) => (
+                <Admin>
+                  {" "}
+                  <Component {...routeProps} />{" "}
+                </Admin>
+              )}
+              key={key}
+            />
+          );
+        })}
+        {subs.map((prop, key) => {
+          const Component = prop.component;
+
+          return (
+            <Route
+              exact
+              path={prop.path}
+              render={(routeProps) => (
+                <Admin>
+                  {" "}
+                  <Component {...routeProps} />{" "}
+                </Admin>
+              )}
+              key={key}
+            />
+          );
+        })}
+      </AuthContextProvider>
     </Switch>
   </BrowserRouter>,
   document.getElementById("root")

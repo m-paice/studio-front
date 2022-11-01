@@ -74,7 +74,7 @@ export function ServicesForm() {
 
   useEffect(() => {
     if (statusCreated === "success" || statusUpdated === "success") {
-      history.push("/admin/services");
+      history.push("/services");
     }
   }, [statusCreated, statusUpdated]);
 
@@ -138,7 +138,7 @@ export function ServicesForm() {
         }}
       >
         <h4> {isEditing ? "Atualizar" : "Novo"} Serviço </h4>
-        <NavLink to="/admin/services">
+        <NavLink to="/services">
           <Button color="info">Voltar</Button>
         </NavLink>
       </div>

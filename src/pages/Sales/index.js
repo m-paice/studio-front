@@ -1,25 +1,19 @@
-import React, { useEffect, useState } from "react";
-import format from "date-fns/format";
-import { NavLink, useHistory } from "react-router-dom";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { NavLink, useHistory } from "react-router-dom";
+import AddCircle from "@material-ui/icons/AddCircle";
 import Delete from "@material-ui/icons/Delete";
 import Edit from "@material-ui/icons/Edit";
-import AddCircle from "@material-ui/icons/AddCircle";
 
-import Table from "../../components/Table/Table";
 import Card from "../../components/Card/Card";
 import CardHeader from "../../components/Card/CardHeader";
-import GridItem from "../../components/Grid/GridItem";
-
 import CardBody from "../../components/Card/CardBody";
 import Button from "../../components/CustomButtons/Button";
-import { Modal } from "../../components/Modal";
-import { Skeleton } from "../../components/Skeleton";
+import Table from "../../components/Table/Table";
 import { Pagination } from "../../components/Pagination";
+import { Skeleton } from "../../components/Skeleton";
 import { useAsync } from "../../hooks/useAsync";
-import { useToggle } from "../../hooks/useToggle";
-import { userResource } from "../../services/users";
-import { Filters } from "./Filters";
+import { salesResource } from "../../services/sales";
 
 const styles = {
   cardCategoryWhite: {
@@ -53,43 +47,20 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-export function Users() {
+export function Sales() {
   const classes = useStyles();
 
   const history = useHistory();
 
-  const { execute, value, status } = useAsync(userResource.findMany);
-  const { execute: deleteById, status: statusDelete } = useAsync(
-    userResource.deleteById
-  );
-
-  const [isOpen, handleChangeIsOpen] = useToggle();
-  const [isOpenFilters, handleToggleOpenFilters] = useToggle();
-
-  const [userId, setUserId] = useState("");
-  const [filters, setFilters] = useState();
+  const { execute, value, status } = useAsync(salesResource.findMany);
 
   useEffect(() => {
-    execute({
-      where: {
-        ...(filters?.name && { name: { $like: `%${filters.name}%` } }),
-        ...(filters?.phone && { cellPhone: { $like: `%${filters.phone}%` } }),
-      },
-    });
-  }, [filters?.name, filters?.phone]);
-
-  useEffect(() => {
-    if (statusDelete === "success") execute();
-  }, [statusDelete]);
+    execute();
+  }, []);
 
   const handleDeleteUser = (valueUserId) => {
-    setUserId(valueUserId);
-    handleChangeIsOpen();
-  };
-
-  const handleSubmitDelete = () => {
-    deleteById(userId);
-    handleChangeIsOpen();
+    // setUserId(valueUserId);
+    // handleChangeIsOpen();
   };
 
   const nextPage = () => {
@@ -108,18 +79,6 @@ export function Users() {
     execute({ page });
   };
 
-  const handleSetFilters = (key, value) => {
-    setFilters((prevState) => ({
-      ...prevState,
-      [key]: value,
-    }));
-  };
-
-  const handleClearFilters = () => {
-    setFilters({});
-    handleToggleOpenFilters();
-  };
-
   return (
     <div>
       <div
@@ -129,58 +88,32 @@ export function Users() {
           justifyContent: "space-between",
         }}
       >
-        <h4> Usuários </h4>
-        <NavLink to="/users/create">
+        <h4> Vendas </h4>
+        <NavLink to="/sales/create">
           <Button color="info">
-            <AddCircle className={classes.icons} /> novo usuário
+            <AddCircle className={classes.icons} /> nova venda
           </Button>
         </NavLink>
       </div>
       <Card>
         <CardHeader color="info">
-          <h4 className={classes.cardTitleWhite}>Lista de Usuários</h4>
+          <h4 className={classes.cardTitleWhite}>Lista de Vendas</h4>
           <p className={classes.cardCategoryWhite}>
-            acompanhe todos os seus usuários por aqui.
+            acompanhe todos as suas vendas por aqui.
           </p>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-            }}
-          >
-            <GridItem xs={12} sm={12} md={12}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <Button onClick={handleClearFilters}>
-                  {" "}
-                  {isOpenFilters ? "Fechar" : "Abrir"} filtros{" "}
-                </Button>
-              </div>{" "}
-            </GridItem>
-          </div>
         </CardHeader>
         <CardBody>
-          {isOpenFilters && <Filters handleSetFilters={handleSetFilters} />}
-
           {status === "pending" ? (
             <Skeleton lines={10} />
           ) : (
             <>
               <Table
                 tableHeaderColor="info"
-                tableHead={["Nome", "Telefone", "Tipo", "Aniversário", "Ações"]}
+                tableHead={["Usuário", "Produtos", "Preço", "Ações"]}
                 tableData={(value?.data || []).map((item) => [
-                  item.name,
-                  item.cellPhone,
-                  item.type === "pf" ? "Cliente" : "Funcionário",
-                  format(new Date(item.birthDate), "dd / MMMM"),
+                  item.user.name,
+                  item.products.length,
+                  item.total,
                   <div key={item.id}>
                     <Button
                       color="warning"
@@ -188,7 +121,7 @@ export function Users() {
                       simple={!(window.innerWidth > 959)}
                       aria-label="Dashboard"
                       className={classes.buttonLink}
-                      onClick={() => history.push(`/users/${item.id}/edit`)}
+                      onClick={() => history.push(`/sales/${item.id}/edit`)}
                     >
                       <Edit className={classes.icons} />
                     </Button>
@@ -217,16 +150,6 @@ export function Users() {
             </>
           )}
         </CardBody>
-
-        <Modal
-          type="warning"
-          onCancel={handleChangeIsOpen}
-          onConfirm={handleSubmitDelete}
-          title="Deseja excluir esse item ?"
-          show={isOpen}
-        >
-          Cuidado! Não sera possível reverter essa ação!
-        </Modal>
       </Card>
     </div>
   );

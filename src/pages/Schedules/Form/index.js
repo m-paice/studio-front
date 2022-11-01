@@ -80,7 +80,7 @@ export function SchedulesForm() {
 
   useEffect(() => {
     if (statusCreated === "success" || statusUpdated === "success") {
-      history.push("/admin/schedules");
+      history.push("/schedules");
     }
   }, [statusCreated, statusUpdated]);
 
@@ -165,7 +165,7 @@ export function SchedulesForm() {
         }}
       >
         <h4> {isEditing ? "Atualizar" : "Novo"} Agendamento </h4>
-        <NavLink to="/admin/schedules">
+        <NavLink to="/schedules">
           <Button color="info">Voltar</Button>
         </NavLink>
       </div>

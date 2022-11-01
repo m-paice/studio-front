@@ -138,7 +138,7 @@ export function Services() {
         }}
       >
         <h4> Serviços </h4>
-        <NavLink to="/admin/services/create">
+        <NavLink to="/services/create">
           <Button color="info">
             <AddCircle className={classes.icons} /> novo serviço
           </Button>
@@ -196,9 +196,7 @@ export function Services() {
                       simple={!(window.innerWidth > 959)}
                       aria-label="Dashboard"
                       className={classes.buttonLink}
-                      onClick={() =>
-                        history.push(`/admin/services/${item.id}/edit`)
-                      }
+                      onClick={() => history.push(`/services/${item.id}/edit`)}
                     >
                       <Edit className={classes.icons} />
                     </Button>

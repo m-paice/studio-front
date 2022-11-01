@@ -14,8 +14,9 @@ import CardFooter from "../../../components/Card/CardFooter.js";
 import { useAsync } from "../../../hooks/useAsync.js";
 import { useForm } from "../../../hooks/useForm";
 import { userResource } from "../../../services/users/index.js";
-import { Select } from "../../../components/CustomInput/Select.js";
-import format from "date-fns/format";
+import { accountResource } from "../../../services/accounts";
+import { SelectAsync } from "../../../components/CustomInput/SelectAsync";
+import { Skeleton } from "../../../components/Skeleton/index.js";
 
 const styles = {
   cardCategoryWhite: {
@@ -40,21 +41,16 @@ const errorsMessage = {
   required: "Campo obrigatório",
 };
 
-const options = [
-  { value: "pf", label: "Cliente" },
-  { value: "pj", label: "Funcionário" },
-];
-
 const initialValues = {
-  birthDate: "",
   name: "",
   cellPhone: "",
-  type: "",
+  password: "",
+  account: "",
 };
 
 const useStyles = makeStyles(styles);
 
-export function UsersForm() {
+export function UsersAdminForm() {
   const classes = useStyles();
 
   const history = useHistory();
@@ -70,30 +66,30 @@ export function UsersForm() {
 
   const [fields, setField, setAllFields, validateAllFields] = useForm({
     initialValues,
-    requireds: ["name", "type"],
+    requireds: ["name", "cellPhone", "password", "account"],
   });
 
   const [errors, setErrors] = useState();
 
   useEffect(() => {
-    if (statusCreated === "success" || statusUpdated === "success") {
-      history.push("/users");
-    }
-  }, [statusCreated, statusUpdated]);
+    if (id) findById(id);
+  }, []);
 
   useEffect(() => {
-    if (id) findById(id);
-
-    setField("type", options[0]);
-  }, []);
+    if (statusCreated === "success" || statusUpdated === "success") {
+      history.push("/useradmin");
+    }
+  }, [statusCreated, statusUpdated]);
 
   useEffect(() => {
     if (user) {
       setAllFields({
         name: user.name,
         cellPhone: user.cellPhone,
-        type: options.find((item) => item.value === user.type),
-        birthDate: format(new Date(user.birthDate), "yyyy-MM-dd"),
+        password: user.password,
+        account: user.account
+          ? { label: user.account.name, value: user.account }
+          : { label: "Nenhuma conta encontrada", value: "" },
       });
     }
   }, [user]);
@@ -107,9 +103,10 @@ export function UsersForm() {
     }
 
     const payload = {
-      ...fields,
-      birthDate: new Date(`${fields.birthDate} 10:00:00`),
-      type: fields.type.value,
+      cellPhone: fields.cellPhone,
+      name: fields.name,
+      password: fields.password,
+      accountId: fields.account.value.id,
     };
 
     if (id) {
@@ -121,6 +118,24 @@ export function UsersForm() {
 
   const isEditing = !!id;
 
+  if (isEditing && !fields.account) {
+    return (
+      <div>
+        <h4>
+          <Skeleton />
+        </h4>
+        <Card>
+          <CardHeader color="info">
+            <Skeleton lines={2} />
+          </CardHeader>
+          <CardBody>
+            <Skeleton lines={2} />
+          </CardBody>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div
@@ -131,7 +146,7 @@ export function UsersForm() {
         }}
       >
         <h4> {isEditing ? "Atualizar" : "Novo"} Usuário </h4>
-        <NavLink to="/users">
+        <NavLink to="/useradmin">
           <Button color="info">Voltar</Button>
         </NavLink>
       </div>
@@ -164,6 +179,20 @@ export function UsersForm() {
                 {!!errors?.name && errorsMessage[errors.name]}{" "}
               </span>
             </GridItem>
+
+            <GridItem xs={12} sm={6} md={6}>
+              <SelectAsync
+                exec={accountResource.findByName}
+                clickOption={(value) => setField("account", value)}
+                placeholder="Pesquise uma conta"
+                defaultValue={fields.account}
+              />
+              <span style={{ fontSize: 12, color: "red" }}>
+                {" "}
+                {!!errors?.name && errorsMessage[errors.name]}{" "}
+              </span>
+            </GridItem>
+
             <GridItem xs={12} sm={6} md={6}>
               <CustomInput
                 id="cellPhone"
@@ -177,32 +206,27 @@ export function UsersForm() {
                     setField("cellPhone", event.target.value),
                 }}
               />
+              <span style={{ fontSize: 12, color: "red" }}>
+                {" "}
+                {!!errors?.name && errorsMessage[errors.name]}{" "}
+              </span>
             </GridItem>
 
             <GridItem xs={12} sm={6} md={6}>
               <CustomInput
-                id="birthDate"
+                id="password"
+                labelText="Senha"
                 formControlProps={{
                   fullWidth: true,
                 }}
                 inputProps={{
-                  type: "date",
-                  value: fields.birthDate,
-                  onChange: (event) =>
-                    setField("birthDate", event.target.value),
+                  value: fields.password,
+                  onChange: (event) => setField("password", event.target.value),
                 }}
-              />
-            </GridItem>
-
-            <GridItem xs={12} sm={6} md={6}>
-              <Select
-                options={options}
-                value={fields.type}
-                onChange={(val) => setField("type", val)}
               />
               <span style={{ fontSize: 12, color: "red" }}>
                 {" "}
-                {!!errors?.type && errorsMessage[errors.type]}{" "}
+                {!!errors?.name && errorsMessage[errors.name]}{" "}
               </span>
             </GridItem>
           </GridContainer>
