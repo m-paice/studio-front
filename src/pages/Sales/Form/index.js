@@ -90,6 +90,7 @@ export function SalesForm() {
           id: item.id,
           name: item.name,
           price: item.price,
+          avaliable: item.amount,
           discount: item.ProductSale.discount,
           addition: item.ProductSale.addition,
           amount: item.ProductSale.amount,
@@ -121,6 +122,22 @@ export function SalesForm() {
       return;
     }
 
+    const checkAvaliableProducts =
+      fields.products.length &&
+      fields.products.some((item) => {
+        return item.amount > item.avaliable;
+      });
+
+    if (checkAvaliableProducts) {
+      setErrors({
+        avaliable: fields.products.filter(
+          (item) => item.amount > item.avaliable
+        ),
+      });
+
+      return;
+    }
+
     const payload = {
       userId: fields.user.value.id,
       products: fields.products,
@@ -144,6 +161,7 @@ export function SalesForm() {
         id: product.id,
         name: product.name,
         price: product.price,
+        avaliable: product.amount,
         amount: 1,
         discount: 0,
         addition: 0,
@@ -247,6 +265,20 @@ export function SalesForm() {
             <GridContainer>
               <GridItem xs={12} sm={12} md={12}>
                 <Card>
+                  {errors?.avaliable?.map((item, index) => (
+                    <span
+                      style={{
+                        fontSize: 12,
+                        color: "red",
+                        textAlign: "center",
+                      }}
+                      key={index}
+                    >
+                      {" "}
+                      O produto {item.name} tem apenas {item.avaliable}{" "}
+                      disponível{" "}
+                    </span>
+                  ))}
                   <Table
                     tableHeaderColor="info"
                     tableHead={[

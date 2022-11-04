@@ -79,6 +79,15 @@ export function Sales() {
     execute({ page });
   };
 
+  const formatPrice = (value = 0) => {
+    if (!value) return 0;
+
+    return value.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+  };
+
   return (
     <div>
       <div
@@ -112,8 +121,10 @@ export function Sales() {
                 tableHead={["Usuário", "Produtos", "Preço", "Ações"]}
                 tableData={(value?.data || []).map((item) => [
                   item.user.name,
-                  item.products.length,
-                  item.total,
+                  item.products.reduce((acc, cur) => {
+                    return acc + cur.ProductSale.amount;
+                  }, 0),
+                  formatPrice(item.total),
                   <div key={item.id}>
                     <Button
                       color="warning"
