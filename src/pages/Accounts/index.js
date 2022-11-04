@@ -18,6 +18,7 @@ import { useAsync } from "../../hooks/useAsync";
 import { useToggle } from "../../hooks/useToggle";
 import { accountResource } from "../../services/accounts";
 import { Filters } from "./Filters";
+import { Helmet } from "../../components/Helmet";
 
 const styles = {
   cardCategoryWhite: {
@@ -133,6 +134,8 @@ export function Accounts() {
 
   return (
     <div>
+      <Helmet title="Contas" />
+
       <div
         style={{
           display: "flex",

@@ -6,6 +6,7 @@ import CardBody from "../../components/Card/CardBody";
 import CardFooter from "../../components/Card/CardFooter";
 import CardHeader from "../../components/Card/CardHeader";
 import RegularButton from "../../components/CustomButtons/Button";
+import { Helmet } from "../../components/Helmet";
 import CustomInput from "../../components/CustomInput/CustomInput";
 
 import { useAuthContext } from "../../context/Auth";
@@ -58,6 +59,7 @@ export function Login() {
 
   return (
     <form onSubmit={handleSubmit}>
+      <Helmet title="Login" />
       <Card>
         <CardHeader
           color="info"

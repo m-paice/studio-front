@@ -12,6 +12,7 @@ import { userResource } from "../../services/users";
 import { useAuthContext } from "../../context/Auth";
 import { Modal } from "../../components/Modal";
 import { useToggle } from "../../hooks/useToggle";
+import { Helmet } from "../../components/Helmet";
 
 const errorsMessage = {
   required: "Campo obrigatório",
@@ -78,6 +79,7 @@ export function Profile() {
 
   return (
     <div>
+      <Helmet title="Perfil" />
       <CustomTabs
         title="Perfil"
         headerColor="primary"

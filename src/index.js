@@ -14,7 +14,7 @@ ReactDOM.render(
     <Switch>
       <AuthContextProvider>
         {/* <Redirect from="/" to="/login" /> */}
-        <Route exact path="/login" component={LayoutLogin} />
+        <Route exact path="/" component={LayoutLogin} />
         {routes.map((prop, key) => {
           const Component = prop.component;
 

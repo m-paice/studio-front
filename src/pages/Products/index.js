@@ -16,6 +16,7 @@ import { useAsync } from "../../hooks/useAsync";
 import { useToggle } from "../../hooks/useToggle";
 import { productResource } from "../../services/products";
 import { Modal } from "../../components/Modal";
+import { Helmet } from "../../components/Helmet";
 
 const styles = {
   cardCategoryWhite: {
@@ -108,6 +109,7 @@ export function Products() {
 
   return (
     <div>
+      <Helmet title="Produtos" />
       <div
         style={{
           display: "flex",

@@ -107,7 +107,7 @@ export const subs = [
 ];
 
 export const routeLogin = {
-  path: "/login",
+  path: "/",
   component: Login,
 };
 

@@ -18,6 +18,7 @@ import { useToggle } from "../../hooks/useToggle";
 import { Modal } from "../../components/Modal";
 import { serviceResource } from "../../services/services";
 import { Filters } from "./Filters";
+import { Helmet } from "../../components/Helmet";
 
 const styles = {
   cardCategoryWhite: {
@@ -130,6 +131,7 @@ export function Services() {
 
   return (
     <div>
+      <Helmet title="Serviços" />
       <div
         style={{
           display: "flex",

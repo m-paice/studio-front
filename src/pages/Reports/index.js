@@ -26,6 +26,7 @@ import { reportsResource } from "../../services/reports";
 import { useAuthContext } from "../../context/Auth";
 
 import styles from "../../assets/jss/material-dashboard-react/views/dashboardStyle.js";
+import { Helmet } from "../../components/Helmet";
 
 const useStyles = makeStyles(styles);
 
@@ -112,6 +113,7 @@ export function Reports() {
 
   return (
     <div>
+      <Helmet title="Relatórios" />
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
           <Card>

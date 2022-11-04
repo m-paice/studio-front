@@ -12,6 +12,7 @@ import CardBody from "../../components/Card/CardBody";
 import Button from "../../components/CustomButtons/Button";
 import { Modal } from "../../components/Modal";
 import { Skeleton } from "../../components/Skeleton";
+import { Helmet } from "../../components/Helmet";
 import { Pagination } from "../../components/Pagination";
 import { useAsync } from "../../hooks/useAsync";
 import { useToggle } from "../../hooks/useToggle";
@@ -108,6 +109,7 @@ export function Categories() {
 
   return (
     <div>
+      <Helmet title="Categorias" />
       <div
         style={{
           display: "flex",

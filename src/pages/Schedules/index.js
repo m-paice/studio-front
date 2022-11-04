@@ -17,6 +17,7 @@ import { useAsync } from "../../hooks/useAsync";
 import { useToggle } from "../../hooks/useToggle";
 import { scheduleResource } from "../../services/schedules";
 import { Filters } from "./Filters";
+import { Helmet } from "../../components/Helmet";
 
 const styles = {
   cardCategoryWhite: {
@@ -158,6 +159,7 @@ export function Schedules() {
 
   return (
     <div>
+      <Helmet title="Agendamentos" />
       <div
         style={{
           display: "flex",

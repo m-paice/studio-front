@@ -20,6 +20,7 @@ import { useAsync } from "../../hooks/useAsync";
 import { useToggle } from "../../hooks/useToggle";
 import { userResource } from "../../services/users";
 import { Filters } from "./Filters";
+import { Helmet } from "../../components/Helmet";
 
 const styles = {
   cardCategoryWhite: {
@@ -122,6 +123,7 @@ export function UsersAdmin() {
 
   return (
     <div>
+      <Helmet title="Usuários" />
       <div
         style={{
           display: "flex",

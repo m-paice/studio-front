@@ -14,6 +14,7 @@ import { Pagination } from "../../components/Pagination";
 import { Skeleton } from "../../components/Skeleton";
 import { useAsync } from "../../hooks/useAsync";
 import { salesResource } from "../../services/sales";
+import { Helmet } from "../../components/Helmet";
 
 const styles = {
   cardCategoryWhite: {
@@ -90,6 +91,7 @@ export function Sales() {
 
   return (
     <div>
+      <Helmet title="Vendas" />
       <div
         style={{
           display: "flex",
