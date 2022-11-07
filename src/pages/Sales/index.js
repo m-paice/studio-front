@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { NavLink, useHistory } from "react-router-dom";
 import AddCircle from "@material-ui/icons/AddCircle";
@@ -15,6 +15,8 @@ import { Skeleton } from "../../components/Skeleton";
 import { useAsync } from "../../hooks/useAsync";
 import { salesResource } from "../../services/sales";
 import { Helmet } from "../../components/Helmet";
+import { useToggle } from "../../hooks/useToggle";
+import { Modal } from "../../components/Modal";
 
 const styles = {
   cardCategoryWhite: {
@@ -50,18 +52,32 @@ const useStyles = makeStyles(styles);
 
 export function Sales() {
   const classes = useStyles();
-
   const history = useHistory();
 
+  const [selectItem, setSelectItem] = useState("");
+  const [isOpen, handleChangeIsOpen] = useToggle();
+
   const { execute, value, status } = useAsync(salesResource.findMany);
+  const { execute: deleteById, status: statusDelete } = useAsync(
+    salesResource.deleteById
+  );
 
   useEffect(() => {
     execute();
   }, []);
 
-  const handleDeleteUser = (valueUserId) => {
-    // setUserId(valueUserId);
-    // handleChangeIsOpen();
+  useEffect(() => {
+    if (statusDelete === "success") execute();
+  }, [statusDelete]);
+
+  const handleDelete = (itemId) => {
+    setSelectItem(itemId);
+    handleChangeIsOpen();
+  };
+
+  const handleSubmitDelete = () => {
+    deleteById(selectItem);
+    handleChangeIsOpen();
   };
 
   const nextPage = () => {
@@ -144,7 +160,7 @@ export function Sales() {
                       simple={!(window.innerWidth > 959)}
                       aria-label="Dashboard"
                       className={classes.buttonLink}
-                      onClick={() => handleDeleteUser(item.id)}
+                      onClick={() => handleDelete(item.id)}
                     >
                       <Delete className={classes.icons} />
                     </Button>
@@ -164,6 +180,16 @@ export function Sales() {
           )}
         </CardBody>
       </Card>
+
+      <Modal
+        type="warning"
+        onCancel={handleChangeIsOpen}
+        onConfirm={handleSubmitDelete}
+        title="Deseja excluir esse item ?"
+        show={isOpen}
+      >
+        Cuidado! Não sera possível reverter essa ação!
+      </Modal>
     </div>
   );
 }

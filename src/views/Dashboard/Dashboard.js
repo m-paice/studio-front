@@ -5,7 +5,7 @@ export default function Dashboard() {
   return (
     <div>
       <Helmet title="Home" />
-      <h4> Dashboard </h4>;
+      <h4> Dashboard </h4>
     </div>
   );
 }
