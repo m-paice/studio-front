@@ -28,7 +28,7 @@ import logo from "../../assets/img/logo.png";
 const useStyles = makeStyles(styles);
 
 export default function AdminNavbarLinks() {
-  const { user } = useAuthContext();
+  const { user, handleClear } = useAuthContext();
 
   const history = useHistory();
 
@@ -134,7 +134,10 @@ export default function AdminNavbarLinks() {
                       </MenuItem> */}
                       <Divider light />
                       <MenuItem
-                        onClick={() => history.push("/login")}
+                        onClick={() => {
+                          history.push("/");
+                          handleClear();
+                        }}
                         className={classes.dropdownItem}
                       >
                         Sair

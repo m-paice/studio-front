@@ -22,10 +22,19 @@ export function AuthContextProvider({ children }) {
     localStorage.setItem("user", JSON.stringify(payload.user));
   };
 
+  const handleClear = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    setToken("");
+    setUser("");
+  };
+
   return (
     <AuthContext.Provider
       value={{
         handleSetTokenAndUser,
+        handleClear,
         token,
         user,
       }}
