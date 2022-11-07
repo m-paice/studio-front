@@ -138,7 +138,7 @@ export function Sales() {
                 tableHeaderColor="info"
                 tableHead={["Usuário", "Produtos", "Preço", "Ações"]}
                 tableData={(value?.data || []).map((item) => [
-                  item.user.name,
+                  item?.user?.name,
                   item.products.reduce((acc, cur) => {
                     return acc + cur.ProductSale.amount;
                   }, 0),
