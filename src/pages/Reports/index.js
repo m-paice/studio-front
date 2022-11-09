@@ -47,10 +47,13 @@ export function Reports() {
   const [openDetailsEntry, handleToggleOpenDetailsEntry] = useToggle();
   const [openDetailsOut, handleToggleOpenDetailsOut] = useToggle();
 
+  const isSaleAccount = user.account.type === "sales";
+
   const handleSubmit = () => {
     const payload = {
       startAt: fields.startAt,
       endAt: fields.endAt,
+      type: isSaleAccount ? "sales" : "schedules",
     };
 
     execute(payload);
@@ -64,8 +67,6 @@ export function Reports() {
       currency: "BRL",
     });
   };
-
-  const isSaleAccount = user.account.type === "sales";
 
   useEffect(() => {
     const currentDate = new Date();
