@@ -91,9 +91,13 @@ export function SchedulesForm() {
   useEffect(() => {
     if (value) {
       setAllFields({
-        user: { label: value.user.name, value: value.user },
-        service: { label: value.service.name, value: value.service },
-        employee: { label: value.employee.name, value: value.employee },
+        user: value?.user ? { label: value.user.name, value: value.user } : {},
+        service: value?.service
+          ? { label: value.service.name, value: value.service }
+          : {},
+        employee: value?.employee
+          ? { label: value.employee.name, value: value.employee }
+          : {},
         date: format(new Date(value.scheduleAt), "yyyy-MM-dd"),
         time: format(new Date(value.scheduleAt), "HH:mm"),
         isPackage: value.isPackage,
@@ -132,12 +136,7 @@ export function SchedulesForm() {
 
   const isEditing = !!id;
 
-  if (
-    isEditing &&
-    !fields.user?.value &&
-    !fields.service?.value &&
-    !fields.employee?.value
-  ) {
+  if (isEditing && (!value?.user || !value?.service || !value?.employee)) {
     return (
       <div>
         <h4>
@@ -186,11 +185,14 @@ export function SchedulesForm() {
                   exec={userResource.findByName}
                   clickOption={(value) => setField("user", value)}
                   placeholder="Pesquise um usuário"
-                  defaultValue={fields.user}
+                  defaultValue={
+                    isEditing
+                      ? { label: value.user.name, value: value.user }
+                      : null
+                  }
                 />
                 <span style={{ fontSize: 12, color: "red" }}>
-                  {" "}
-                  {!!errors?.user && errorsMessage[errors.user]}{" "}
+                  {!!errors?.user && errorsMessage[errors.user]}
                 </span>
               </GridItem>
 
@@ -199,11 +201,14 @@ export function SchedulesForm() {
                   exec={serviceResource.findByName}
                   clickOption={(value) => setField("service", value)}
                   placeholder="Pesquise um serviço"
-                  defaultValue={fields.service}
+                  defaultValue={
+                    isEditing
+                      ? { label: value.service.name, value: value.service }
+                      : null
+                  }
                 />
                 <span style={{ fontSize: 12, color: "red" }}>
-                  {" "}
-                  {!!errors?.service && errorsMessage[errors.service]}{" "}
+                  {!!errors?.service && errorsMessage[errors.service]}
                 </span>
               </GridItem>
 
@@ -212,11 +217,14 @@ export function SchedulesForm() {
                   exec={userResource.findEmployeeByName}
                   clickOption={(value) => setField("employee", value)}
                   placeholder="Pesquise um funcionário"
-                  defaultValue={fields.employee}
+                  defaultValue={
+                    isEditing
+                      ? { label: value.employee.name, value: value.employee }
+                      : null
+                  }
                 />
                 <span style={{ fontSize: 12, color: "red" }}>
-                  {" "}
-                  {!!errors?.employee && errorsMessage[errors.employee]}{" "}
+                  {!!errors?.employee && errorsMessage[errors.employee]}
                 </span>
               </GridItem>
 
@@ -234,8 +242,7 @@ export function SchedulesForm() {
                   }}
                 />
                 <span style={{ fontSize: 12, color: "red" }}>
-                  {" "}
-                  {!!errors?.date && errorsMessage[errors.date]}{" "}
+                  {!!errors?.date && errorsMessage[errors.date]}
                 </span>
               </GridItem>
 
@@ -253,8 +260,7 @@ export function SchedulesForm() {
                   }}
                 />
                 <span style={{ fontSize: 12, color: "red" }}>
-                  {" "}
-                  {!!errors?.time && errorsMessage[errors.time]}{" "}
+                  {!!errors?.time && errorsMessage[errors.time]}
                 </span>
               </GridItem>
 

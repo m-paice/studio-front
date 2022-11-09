@@ -85,7 +85,7 @@ export function SalesForm() {
   useEffect(() => {
     if (value) {
       setAllFields({
-        user: { label: value.user.name, value: value.user },
+        user: value?.user ? { label: value.user.name, value: value.user } : {},
         products: value.products.map((item) => ({
           id: item.id,
           name: item.name,
@@ -193,7 +193,7 @@ export function SalesForm() {
 
   const isEditing = !!id;
 
-  if (isEditing && !fields.user?.value) {
+  if (isEditing && !value?.user) {
     return (
       <div>
         <h4>
@@ -241,7 +241,11 @@ export function SalesForm() {
                 exec={userResource.findByName}
                 clickOption={(value) => setField("user", value)}
                 placeholder="Pesquise um usuário"
-                defaultValue={fields.user}
+                defaultValue={
+                  isEditing
+                    ? { label: value.user.name, value: value.user }
+                    : null
+                }
               />
               <span style={{ fontSize: 12, color: "red" }}>
                 {!!errors?.user && errorsMessage[errors.user]}
@@ -253,7 +257,7 @@ export function SalesForm() {
                 exec={productResource.findByName}
                 clickOption={(value) => handleAddProduct(value?.value)}
                 placeholder="Pesquise um produto"
-                defaultValue={fields.product}
+                defaultValue={null}
               />
               <span style={{ fontSize: 12, color: "red" }}>
                 {!!errors?.product && errorsMessage[errors.product]}

@@ -82,5 +82,4 @@ CustomTable.propTypes = {
     "gray",
   ]),
   tableHead: PropTypes.arrayOf(PropTypes.string),
-  tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
 };

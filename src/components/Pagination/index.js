@@ -34,7 +34,6 @@ export function Pagination({
         </span>
         <Button
           color="info"
-          inverse
           onClick={() => nextPage()}
           // disabled={!canNextPage}
         >
@@ -42,7 +41,6 @@ export function Pagination({
         </Button>
         <Button
           color="info"
-          inverse
           onClick={() => goToPage(lastPage)}
           // disabled={!canNextPage}
         >
