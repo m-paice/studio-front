@@ -79,27 +79,28 @@ export default function Sidebar(props) {
             activeClassName="active"
             key={key}
           >
-            <ListItem button className={classes.itemLink + listItemClasses}>
+            <ListItem
+              button
+              className={
+                props.active
+                  ? classes.itemLinkSm + listItemClasses
+                  : classes.itemLink + listItemClasses
+              }
+            >
               {typeof prop.icon === "string" ? (
                 <Icon
-                  className={classNames(classes.itemIcon, whiteFontClasses, {
-                    [classes.itemIconRTL]: props.rtlActive,
-                  })}
+                  className={classNames(classes.itemIcon, whiteFontClasses)}
                 >
                   {prop.icon}
                 </Icon>
               ) : (
                 <prop.icon
-                  className={classNames(classes.itemIcon, whiteFontClasses, {
-                    [classes.itemIconRTL]: props.rtlActive,
-                  })}
+                  className={classNames(classes.itemIcon, whiteFontClasses)}
                 />
               )}
               <ListItemText
-                primary={prop.name}
-                className={classNames(classes.itemText, whiteFontClasses, {
-                  [classes.itemTextRTL]: props.rtlActive,
-                })}
+                primary={props.active ? "" : prop.name}
+                className={classNames(classes.itemText, whiteFontClasses)}
                 disableTypography={true}
               />
             </ListItem>
@@ -112,15 +113,16 @@ export default function Sidebar(props) {
     <div className={classes.logo}>
       <a
         href=""
-        className={classNames(classes.logoLink, {
-          [classes.logoLinkRTL]: props.rtlActive,
-        })}
+        className={classNames(
+          props.active ? classes.logoLinkSm : classes.logoLink
+        )}
         target="_blank"
       >
-        {logoText || "Admin"}
+        {"Studio Roane Rocha" || "Admin"}
       </a>
     </div>
   );
+
   return (
     <div>
       <Hidden mdUp implementation="css">
@@ -129,9 +131,9 @@ export default function Sidebar(props) {
           anchor={props.rtlActive ? "left" : "right"}
           open={props.open}
           classes={{
-            paper: classNames(classes.drawerPaper, {
-              [classes.drawerPaperRTL]: props.rtlActive,
-            }),
+            paper: classNames(
+              props.active ? classes.drawerPaperSm : classes.drawerPaper
+            ),
           }}
           onClose={props.handleDrawerToggle}
           ModalProps={{
@@ -139,7 +141,11 @@ export default function Sidebar(props) {
           }}
         >
           {brand}
-          <div className={classes.sidebarWrapper}>
+          <div
+            className={
+              props.active ? classes.sidebarWrapperSm : classes.sidebarWrapper
+            }
+          >
             {props.rtlActive ? <RTLNavbarLinks /> : <AdminNavbarLinks />}
             {links}
           </div>
@@ -157,13 +163,19 @@ export default function Sidebar(props) {
           variant="permanent"
           open
           classes={{
-            paper: classNames(classes.drawerPaper, {
-              [classes.drawerPaperRTL]: props.rtlActive,
-            }),
+            paper: classNames(
+              props.active ? classes.drawerPaperSm : classes.drawerPaper
+            ),
           }}
         >
           {brand}
-          <div className={classes.sidebarWrapper}>{links}</div>
+          <div
+            className={
+              props.active ? classes.sidebarWrapperSm : classes.sidebarWrapper
+            }
+          >
+            {links}
+          </div>
           {image !== undefined ? (
             <div
               className={classes.background}

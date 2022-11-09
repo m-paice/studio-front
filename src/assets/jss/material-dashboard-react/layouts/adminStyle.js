@@ -2,6 +2,7 @@ import {
   drawerWidth,
   transition,
   container,
+  drawerWidthSm,
 } from "../../material-dashboard-react.js";
 
 const appStyle = (theme) => ({
@@ -13,6 +14,18 @@ const appStyle = (theme) => ({
   mainPanel: {
     [theme.breakpoints.up("md")]: {
       width: `calc(100% - ${drawerWidth}px)`,
+    },
+    overflow: "auto",
+    position: "relative",
+    float: "right",
+    ...transition,
+    maxHeight: "100%",
+    width: "100%",
+    overflowScrolling: "touch",
+  },
+  mainPanelSm: {
+    [theme.breakpoints.up("md")]: {
+      width: `calc(100% - ${drawerWidthSm}px)`,
     },
     overflow: "auto",
     position: "relative",

@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Switch, Route } from "react-router-dom";
+import Search from "@material-ui/icons/Search";
 // creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
 // import "perfect-scrollbar/css/perfect-scrollbar.css";
@@ -17,6 +18,7 @@ import styles from "../assets/jss/material-dashboard-react/layouts/adminStyle.js
 import bgImage from "../assets/img/sidebar-2.jpg";
 import logo from "../assets/img/reactlogo.png";
 import AdminNavbarLinks from "../components/Navbars/AdminNavbarLinks";
+import Button from "../components/CustomButtons/Button";
 import { useAuthContext } from "../context/Auth";
 
 let ps;
@@ -24,6 +26,8 @@ let ps;
 const useStyles = makeStyles(styles);
 
 export default function Admin({ ...rest }) {
+  const [toggle, setToggle] = useState(false);
+
   // styles
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
@@ -78,9 +82,15 @@ export default function Admin({ ...rest }) {
       window.removeEventListener("resize", resizeFunction);
     };
   }, [mainPanel]);
+
+  const handleToggle = () => {
+    setToggle(!toggle);
+  };
+
   return (
     <div className={classes.wrapper}>
       <Sidebar
+        active={toggle}
         routes={routes}
         logoText={user?.account?.name}
         logo={logo}
@@ -90,8 +100,11 @@ export default function Admin({ ...rest }) {
         color={color}
         {...rest}
       />
-      <div className={classes.mainPanel} ref={mainPanel}>
-        <AdminNavbarLinks />
+      <div
+        className={toggle ? classes.mainPanelSm : classes.mainPanel}
+        ref={mainPanel}
+      >
+        <AdminNavbarLinks handleToggle={handleToggle} active={toggle} />
         {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
 
         <div className={classes.content}>

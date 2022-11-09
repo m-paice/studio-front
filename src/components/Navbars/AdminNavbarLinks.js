@@ -16,9 +16,11 @@ import Person from "@material-ui/icons/Person";
 import Notifications from "@material-ui/icons/Notifications";
 import Dashboard from "@material-ui/icons/Dashboard";
 import Search from "@material-ui/icons/Search";
+import ListIcon from "@material-ui/icons/List";
+import MoreVert from "@material-ui/icons/MoreVert";
 // core components
 import CustomInput from "../CustomInput/CustomInput.js";
-import Button from "../CustomButtons/Button.js";
+import Button from "../CustomButtons/Button";
 
 import styles from "../../assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 import { useAuthContext } from "../../context/Auth.js";
@@ -27,7 +29,7 @@ import logo from "../../assets/img/logo.png";
 
 const useStyles = makeStyles(styles);
 
-export default function AdminNavbarLinks() {
+export default function AdminNavbarLinks(props) {
   const { user, handleClear } = useAuthContext();
 
   const history = useHistory();
@@ -61,7 +63,7 @@ export default function AdminNavbarLinks() {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: "10px 45px 30px",
+        padding: "10px 25px 30px",
       }}
     >
       <div
@@ -71,6 +73,15 @@ export default function AdminNavbarLinks() {
           gap: 12,
         }}
       >
+        <Button
+          color="white"
+          aria-label="edit"
+          justIcon
+          round
+          onClick={props.handleToggle}
+        >
+          {props.active ? <ListIcon /> : <MoreVert />}
+        </Button>
         <img src={logo} width="80px" height="80px" />
         <h4> Bem-vindo ao seu Petrecho </h4>
       </div>
