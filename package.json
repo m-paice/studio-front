@@ -1,5 +1,6 @@
 {
   "name": "front-studio",
+  "homepage": "/",
   "version": "1.10.0",
   "description": "front studio",
   "dependencies": {
