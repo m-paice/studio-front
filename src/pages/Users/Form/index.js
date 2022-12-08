@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react";
 
+import format from "date-fns/format";
 import { NavLink, useHistory, useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 
-import GridItem from "../../../components/Grid/GridItem.js";
-import GridContainer from "../../../components/Grid/GridContainer.js";
-import CustomInput from "../../../components/CustomInput/CustomInput.js";
-import Button from "../../../components/CustomButtons/Button.js";
-import Card from "../../../components/Card/Card.js";
-import CardHeader from "../../../components/Card/CardHeader.js";
-import CardBody from "../../../components/Card/CardBody.js";
-import CardFooter from "../../../components/Card/CardFooter.js";
-import { useAsync } from "../../../hooks/useAsync.js";
+import GridItem from "../../../components/Grid/GridItem";
+import GridContainer from "../../../components/Grid/GridContainer";
+import CustomInput from "../../../components/CustomInput/CustomInput";
+import Button from "../../../components/CustomButtons/Button";
+import Card from "../../../components/Card/Card";
+import CardHeader from "../../../components/Card/CardHeader";
+import CardBody from "../../../components/Card/CardBody";
+import CardFooter from "../../../components/Card/CardFooter";
+import { useAsync } from "../../../hooks/useAsync";
 import { useForm } from "../../../hooks/useForm";
-import { userResource } from "../../../services/users/index.js";
-import { Select } from "../../../components/CustomInput/Select.js";
-import format from "date-fns/format";
+import { userResource } from "../../../services/users/index";
+import { Select } from "../../../components/CustomInput/Select";
+import { Loading } from "../../../components/Loading";
 
 const styles = {
   cardCategoryWhite: {
@@ -123,6 +124,9 @@ export function UsersForm() {
 
   return (
     <div>
+      {(statusCreated === "pending" || statusUpdated === "pending") && (
+        <Loading />
+      )}
       <div
         style={{
           display: "flex",

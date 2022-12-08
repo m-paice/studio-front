@@ -15,6 +15,7 @@ import { useAsync } from "../../../hooks/useAsync";
 import { useForm } from "../../../hooks/useForm";
 import { accountResource } from "../../../services/accounts";
 import { Select } from "../../../components/CustomInput/Select.js";
+import { Loading } from "../../../components/Loading";
 
 const styles = {
   cardCategoryWhite: {
@@ -101,6 +102,9 @@ export function AccountsForm() {
 
   return (
     <div>
+      {(statusCreated === "pending" || statusUpdated === "pending") && (
+        <Loading />
+      )}
       <div
         style={{
           display: "flex",

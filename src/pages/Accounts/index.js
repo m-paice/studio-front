@@ -71,10 +71,6 @@ export function Accounts() {
   const [isOpenFilters, handleToggleOpenFilters] = useToggle();
 
   useEffect(() => {
-    execute();
-  }, []);
-
-  useEffect(() => {
     if (statusDelete === "success") execute();
   }, [statusDelete]);
 

@@ -18,6 +18,7 @@ import { salesResource } from "../../../services/sales";
 import { userResource } from "../../../services/users";
 import { productResource } from "../../../services/products";
 import { Skeleton } from "../../../components/Skeleton";
+import { Loading } from "../../../components/Loading";
 import { SelectAsync } from "../../../components/CustomInput/SelectAsync";
 
 const styles = {
@@ -41,6 +42,9 @@ const styles = {
 
 const initialValues = {
   user: "",
+  formOfPayment: null,
+  amountParcel: null,
+  isParcel: false,
   products: [],
 };
 
@@ -55,6 +59,8 @@ export function SalesForm() {
 
   const history = useHistory();
   const { id } = useParams();
+
+  const isEditing = !!id;
 
   const { execute: create, status: statusCreated } = useAsync(
     salesResource.create
@@ -95,6 +101,9 @@ export function SalesForm() {
           addition: item.ProductSale.addition,
           amount: item.ProductSale.amount,
         })),
+        formOfPayment: value.payment?.formOfPayment || null,
+        amountParcel: value.payment?.amountParcel || null,
+        isParcel: value.payment?.amountParcel > 1 ? "1" : "2",
       });
     }
   }, [value]);
@@ -128,7 +137,7 @@ export function SalesForm() {
         return item.amount > item.avaliable;
       });
 
-    if (checkAvaliableProducts) {
+    if (!isEditing && checkAvaliableProducts) {
       setErrors({
         avaliable: fields.products.filter(
           (item) => item.amount > item.avaliable
@@ -141,6 +150,9 @@ export function SalesForm() {
     const payload = {
       userId: fields.user.value.id,
       products: fields.products,
+      formOfPayment: fields.formOfPayment || 1, // ou a vista
+      amountParcel:
+        fields.isParcel && fields.isParcel == 2 ? 1 : fields.amountParcel,
     };
 
     if (id) {
@@ -191,8 +203,6 @@ export function SalesForm() {
     );
   };
 
-  const isEditing = !!id;
-
   if (isEditing && !value?.user) {
     return (
       <div>
@@ -213,6 +223,9 @@ export function SalesForm() {
 
   return (
     <div>
+      {(statusCreated === "pending" || statusUpdated === "pending") && (
+        <Loading />
+      )}
       <div
         style={{
           display: "flex",
@@ -378,6 +391,83 @@ export function SalesForm() {
               </GridItem>
             </GridContainer>
           )}
+
+          {total > 0 && (
+            <div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <b> Forma de pagamento </b>
+                <label htmlFor="form_pgt_cartao">
+                  <input
+                    type="radio"
+                    name="form_pgt"
+                    id="form_pgt_cartao"
+                    value="2"
+                    onChange={(e) => setField("formOfPayment", e.target.value)}
+                    checked={fields.formOfPayment == 2}
+                  />{" "}
+                  Cartão
+                </label>
+
+                <label htmlFor="form_pgt_dinheiro">
+                  <input
+                    type="radio"
+                    name="form_pgt"
+                    id="form_pgt_dinheiro"
+                    value="1"
+                    onChange={(e) => setField("formOfPayment", e.target.value)}
+                    checked={fields.formOfPayment == 1}
+                  />{" "}
+                  A vista
+                </label>
+              </div>
+
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <b> Parcelado </b>
+
+                <label htmlFor="parcelado_sim">
+                  <input
+                    type="radio"
+                    name="parcelado"
+                    id="parcelado_sim"
+                    value="1"
+                    onChange={(e) => setField("isParcel", e.target.value)}
+                    checked={fields.isParcel == 1}
+                  />{" "}
+                  SIM
+                </label>
+
+                <label htmlFor="parcelado_nao">
+                  <input
+                    type="radio"
+                    name="parcelado"
+                    id="parcelado_nao"
+                    value="2"
+                    onChange={(e) => setField("isParcel", e.target.value)}
+                    checked={fields.isParcel == 2}
+                  />{" "}
+                  NÃO
+                </label>
+              </div>
+
+              {fields.isParcel && fields.isParcel === "1" && (
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <b> Quantidade de parcelas </b>
+
+                  <input
+                    type="number"
+                    onChange={(e) => setField("amountParcel", e.target.value)}
+                    value={fields.amountParcel}
+                  />
+
+                  <div>
+                    <b> Subtotal: </b> R${" "}
+                    {(total / Number(fields.amountParcel)).toFixed(2)}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           <div
             style={{
               display: "flex",

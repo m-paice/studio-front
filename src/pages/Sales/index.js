@@ -136,13 +136,38 @@ export function Sales() {
             <>
               <Table
                 tableHeaderColor="info"
-                tableHead={["Usuário", "Produtos", "Preço", "Ações"]}
+                tableHead={[
+                  "Usuário",
+                  "Produtos",
+                  "Preço",
+                  "Pagamento",
+                  "Ações",
+                ]}
                 tableData={(value?.data || []).map((item) => [
                   item?.user?.name,
                   item.products.reduce((acc, cur) => {
                     return acc + cur.ProductSale.amount;
                   }, 0),
                   formatPrice(item.total),
+                  item.payment ? (
+                    <div>
+                      <spa>
+                        {" "}
+                        {item.payment.formOfPayment === 2
+                          ? "Cartão"
+                          : "Dinheiro"}{" "}
+                      </spa>
+                      <spa> {item.payment.amountParcel}x </spa>
+                      <span>
+                        {" "}
+                        ({formatPrice(
+                          item.total / item.payment.amountParcel
+                        )}){" "}
+                      </span>
+                    </div>
+                  ) : (
+                    "Nenhum"
+                  ),
                   <div key={item.id}>
                     <Button
                       color="warning"

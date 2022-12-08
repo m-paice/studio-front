@@ -18,6 +18,8 @@ import { useForm } from "../../../hooks/useForm";
 import { categoryResource } from "../../../services/categories";
 import { productResource } from "../../../services/products";
 import { SelectAsync } from "../../../components/CustomInput/SelectAsync";
+import { Loading } from "../../../components/Loading";
+import { Skeleton } from "../../../components/Skeleton";
 
 const styles = {
   cardCategoryWhite: {
@@ -110,8 +112,29 @@ export function CategoriesForm() {
 
   const isEditing = !!id;
 
+  if (isEditing && !value?.name) {
+    return (
+      <div>
+        <h4>
+          <Skeleton />
+        </h4>
+        <Card>
+          <CardHeader color="info">
+            <Skeleton lines={2} />
+          </CardHeader>
+          <CardBody>
+            <Skeleton lines={2} />
+          </CardBody>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div>
+      {(statusCreated === "pending" || statusUpdated === "pending") && (
+        <Loading />
+      )}
       <div
         style={{
           display: "flex",

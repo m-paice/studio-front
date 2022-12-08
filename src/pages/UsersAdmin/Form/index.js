@@ -17,6 +17,7 @@ import { userResource } from "../../../services/users/index.js";
 import { accountResource } from "../../../services/accounts";
 import { SelectAsync } from "../../../components/CustomInput/SelectAsync";
 import { Skeleton } from "../../../components/Skeleton/index.js";
+import { Loading } from "../../../components/Loading/index.js";
 
 const styles = {
   cardCategoryWhite: {
@@ -138,6 +139,9 @@ export function UsersAdminForm() {
 
   return (
     <div>
+      {(statusCreated === "pending" || statusUpdated === "pending") && (
+        <Loading />
+      )}
       <div
         style={{
           display: "flex",

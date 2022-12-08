@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import format from "date-fns/format";
 import { NavLink, useHistory, useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -18,7 +19,7 @@ import { useForm } from "../../../hooks/useForm";
 import { userResource } from "../../../services/users/index";
 import { serviceResource } from "../../../services/services";
 import { scheduleResource } from "../../../services/schedules";
-import format from "date-fns/format";
+import { Loading } from "../../../components/Loading";
 
 const styles = {
   cardCategoryWhite: {
@@ -156,6 +157,9 @@ export function SchedulesForm() {
 
   return (
     <div>
+      {(statusCreated === "pending" || statusUpdated === "pending") && (
+        <Loading />
+      )}
       <div
         style={{
           display: "flex",
