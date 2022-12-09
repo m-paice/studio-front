@@ -9,4 +9,5 @@ export const scheduleResource = {
 
   changeStatus: (id, payload) =>
     getApi().put(`/schedules/${id}/status`, payload),
+  revert: (id) => getApi().get(`/schedules/${id}/revert`),
 };

@@ -14,12 +14,14 @@ import CardBody from "../../../components/Card/CardBody";
 import CardFooter from "../../../components/Card/CardFooter";
 import { Skeleton } from "../../../components/Skeleton";
 import { SelectAsync } from "../../../components/CustomInput/SelectAsync";
+import { Loading } from "../../../components/Loading";
 import { useAsync } from "../../../hooks/useAsync";
+import { useToggle } from "../../../hooks/useToggle";
 import { useForm } from "../../../hooks/useForm";
 import { userResource } from "../../../services/users/index";
 import { serviceResource } from "../../../services/services";
 import { scheduleResource } from "../../../services/schedules";
-import { Loading } from "../../../components/Loading";
+import { Modal } from "../../../components/Modal";
 
 const styles = {
   cardCategoryWhite: {
@@ -72,6 +74,10 @@ export function SchedulesForm() {
   );
   const { execute: findById, value } = useAsync(scheduleResource.findById);
 
+  const { execute: revertById, status: statusRevert } = useAsync(
+    scheduleResource.revert
+  );
+
   const [fields, setField, setAllFields, validateAllFields] = useForm({
     initialValues,
     requireds: ["user", "service", "employee", "date", "time"],
@@ -79,11 +85,17 @@ export function SchedulesForm() {
 
   const [errors, setErrors] = useState();
 
+  const [isOpen, setIsOpen] = useToggle();
+
   useEffect(() => {
-    if (statusCreated === "success" || statusUpdated === "success") {
+    if (
+      statusCreated === "success" ||
+      statusUpdated === "success" ||
+      statusRevert === "success"
+    ) {
       history.push("/schedules");
     }
-  }, [statusCreated, statusUpdated]);
+  }, [statusCreated, statusUpdated, statusRevert]);
 
   useEffect(() => {
     if (id) findById(id);
@@ -133,6 +145,12 @@ export function SchedulesForm() {
     }
 
     create(payload);
+  };
+
+  const handleSubmitRevert = () => {
+    revertById(id);
+
+    setIsOpen();
   };
 
   const isEditing = !!id;
@@ -320,9 +338,30 @@ export function SchedulesForm() {
             <Button color="info" type="submit" onClick={handleSubmit}>
               {isEditing ? "Atualizar" : "Cadastrar"}
             </Button>
+
+            {isEditing && value?.status !== "pending" && (
+              <p>
+                {" "}
+                Esse agendamento já foi finalizado,{" "}
+                <a href="#" onClick={setIsOpen}>
+                  {" "}
+                  deseja reverter essa ação?{" "}
+                </a>{" "}
+              </p>
+            )}
           </CardFooter>
         </form>
       </Card>
+
+      <Modal
+        type="warning"
+        onCancel={setIsOpen}
+        onConfirm={handleSubmitRevert}
+        title="Deseja reverter esse item ?"
+        show={isOpen}
+      >
+        Cuidado! Você ira perder os relatórios desse agendamento!
+      </Modal>
     </div>
   );
 }
