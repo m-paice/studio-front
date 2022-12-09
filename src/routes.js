@@ -27,6 +27,7 @@ import { UsersAdmin } from "./pages/UsersAdmin";
 import { UsersAdminForm } from "./pages/UsersAdmin/Form";
 import { Sales } from "./pages/Sales";
 import { SalesForm } from "./pages/Sales/Form";
+import { SalesView } from "./pages/Sales/View";
 import { Profile } from "./pages/Profile/index.js";
 
 export const subs = [
@@ -103,6 +104,11 @@ export const subs = [
     path: "/sales/:id/edit",
     component: SalesForm,
     name: "Atualizar vendas",
+  },
+  {
+    path: "/sales/:id",
+    component: SalesView,
+    name: "Visualizar venda",
   },
 ];
 

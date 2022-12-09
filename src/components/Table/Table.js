@@ -27,7 +27,7 @@ export default function CustomTable(props) {
                     className={classes.tableCell + " " + classes.tableHeadCell}
                     style={
                       tableHead.length === key + 1
-                        ? { textAlign: "right", width: 100 }
+                        ? { textAlign: "right", width: 150 }
                         : {}
                     }
                     key={key}

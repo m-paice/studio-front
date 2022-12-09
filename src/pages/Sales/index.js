@@ -4,6 +4,7 @@ import { NavLink, useHistory } from "react-router-dom";
 import AddCircle from "@material-ui/icons/AddCircle";
 import Delete from "@material-ui/icons/Delete";
 import Edit from "@material-ui/icons/Edit";
+import RemoveRedEye from "@material-ui/icons/RemoveRedEye";
 
 import Card from "../../components/Card/Card";
 import CardHeader from "../../components/Card/CardHeader";
@@ -17,6 +18,7 @@ import { salesResource } from "../../services/sales";
 import { Helmet } from "../../components/Helmet";
 import { useToggle } from "../../hooks/useToggle";
 import { Modal } from "../../components/Modal";
+import { formatDate } from "../../utils/formatDate";
 
 const styles = {
   cardCategoryWhite: {
@@ -141,6 +143,7 @@ export function Sales() {
                   "Produtos",
                   "Preço",
                   "Pagamento",
+                  "Data",
                   "Ações",
                 ]}
                 tableData={(value?.data || []).map((item) => [
@@ -168,7 +171,18 @@ export function Sales() {
                   ) : (
                     "Nenhum"
                   ),
+                  formatDate(item.createdAt),
                   <div key={item.id}>
+                    <Button
+                      color="info"
+                      justIcon={window.innerWidth > 959}
+                      simple={!(window.innerWidth > 959)}
+                      aria-label="Dashboard"
+                      className={classes.buttonLink}
+                      onClick={() => history.push(`/sales/${item.id}`)}
+                    >
+                      <RemoveRedEye className={classes.icons} />
+                    </Button>
                     <Button
                       color="warning"
                       justIcon={window.innerWidth > 959}
