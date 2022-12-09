@@ -68,6 +68,8 @@ export function Services() {
     serviceResource.deleteById
   );
 
+  const [order, setOrder] = useState("");
+
   useEffect(() => {
     execute({
       where: {
@@ -75,8 +77,9 @@ export function Services() {
         ...(filters?.type && { type: filters.type.value }),
         ...(filters?.price && { price: filters.price }),
       },
+      ...(order && { order: [["name", "ASC"]] }),
     });
-  }, [filters?.type, filters?.name, filters?.price]);
+  }, [filters?.type, filters?.name, filters?.price, order]);
 
   useEffect(() => {
     if (statusDelete === "success") execute();
@@ -116,17 +119,23 @@ export function Services() {
   const nextPage = () => {
     if (value?.currentPage === value?.lastPage) return;
 
-    execute({ page: value?.currentPage + 1 });
+    execute({
+      ...(order && { order: [["name", "ASC"]] }),
+      page: value?.currentPage + 1,
+    });
   };
 
   const previousPage = () => {
     if (value?.currentPage === 1) return;
 
-    execute({ page: value?.currentPage - 1 });
+    execute({
+      ...(order && { order: [["name", "ASC"]] }),
+      page: value?.currentPage - 1,
+    });
   };
 
   const goToPage = (page) => {
-    execute({ page });
+    execute({ ...(order && { order: [["name", "ASC"]] }), page });
   };
 
   return (
@@ -178,6 +187,14 @@ export function Services() {
         </CardHeader>
         <CardBody>
           {isOpenFilters && <Filters handleSetFilters={handleSetFilters} />}
+
+          <div style={{ display: "flex", justifyContent: "end", gap: 12 }}>
+            <b> ordenar por: </b>{" "}
+            <select onChange={(e) => setOrder(e.target.value)}>
+              <option value=""> Data de atualização </option>
+              <option value="name"> Nome </option>
+            </select>
+          </div>
 
           {status === "pending" ? (
             <Skeleton lines={10} />

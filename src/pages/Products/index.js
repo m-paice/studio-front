@@ -63,10 +63,13 @@ export function Products() {
   const [isOpen, handleChangeIsOpen] = useToggle();
 
   const [userId, setUserId] = useState("");
+  const [order, setOrder] = useState("");
 
   useEffect(() => {
-    execute();
-  }, []);
+    execute({
+      ...(order && { order: [["name", "ASC"]] }),
+    });
+  }, [order]);
 
   useEffect(() => {
     if (statusDelete === "success") execute();
@@ -94,17 +97,23 @@ export function Products() {
   const nextPage = () => {
     if (value?.currentPage === value?.lastPage) return;
 
-    execute({ page: value?.currentPage + 1 });
+    execute({
+      ...(order && { order: [["name", "ASC"]] }),
+      page: value?.currentPage + 1,
+    });
   };
 
   const previousPage = () => {
     if (value?.currentPage === 1) return;
 
-    execute({ page: value?.currentPage - 1 });
+    execute({
+      ...(order && { order: [["name", "ASC"]] }),
+      page: value?.currentPage - 1,
+    });
   };
 
   const goToPage = (page) => {
-    execute({ page });
+    execute({ ...(order && { order: [["name", "ASC"]] }), page });
   };
 
   return (
@@ -132,6 +141,13 @@ export function Products() {
           </p>
         </CardHeader>
         <CardBody>
+          <div style={{ display: "flex", justifyContent: "end", gap: 12 }}>
+            <b> ordenar por: </b>{" "}
+            <select onChange={(e) => setOrder(e.target.value)}>
+              <option value=""> Data de atualização </option>
+              <option value="name"> Nome </option>
+            </select>
+          </div>
           {status === "pending" ? (
             <Skeleton lines={10} />
           ) : (

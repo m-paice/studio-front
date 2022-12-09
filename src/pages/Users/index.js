@@ -70,14 +70,17 @@ export function Users() {
   const [userId, setUserId] = useState("");
   const [filters, setFilters] = useState();
 
+  const [order, setOrder] = useState("");
+
   useEffect(() => {
     execute({
       where: {
         ...(filters?.name && { name: { $like: `%${filters.name}%` } }),
         ...(filters?.phone && { cellPhone: { $like: `%${filters.phone}%` } }),
       },
+      ...(order && { order: [["name", "ASC"]] }),
     });
-  }, [filters?.name, filters?.phone]);
+  }, [filters?.name, filters?.phone, order]);
 
   useEffect(() => {
     if (statusDelete === "success") execute();
@@ -96,17 +99,23 @@ export function Users() {
   const nextPage = () => {
     if (value?.currentPage === value?.lastPage) return;
 
-    execute({ page: value?.currentPage + 1 });
+    execute({
+      ...(order && { order: [["name", "ASC"]] }),
+      page: value?.currentPage + 1,
+    });
   };
 
   const previousPage = () => {
     if (value?.currentPage === 1) return;
 
-    execute({ page: value?.currentPage - 1 });
+    execute({
+      ...(order && { order: [["name", "ASC"]] }),
+      page: value?.currentPage - 1,
+    });
   };
 
   const goToPage = (page) => {
-    execute({ page });
+    execute({ ...(order && { order: [["name", "ASC"]] }), page });
   };
 
   const handleSetFilters = (key, value) => {
@@ -171,6 +180,13 @@ export function Users() {
         <CardBody>
           {isOpenFilters && <Filters handleSetFilters={handleSetFilters} />}
 
+          <div style={{ display: "flex", justifyContent: "end", gap: 12 }}>
+            <b> ordenar por: </b>{" "}
+            <select onChange={(e) => setOrder(e.target.value)}>
+              <option value=""> Data de atualização </option>
+              <option value="name"> Nome </option>
+            </select>
+          </div>
           {status === "pending" ? (
             <Skeleton lines={10} />
           ) : (
