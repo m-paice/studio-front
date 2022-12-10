@@ -179,7 +179,7 @@ export function Sales() {
                       simple={!(window.innerWidth > 959)}
                       aria-label="Dashboard"
                       className={classes.buttonLink}
-                      onClick={() => history.push(`/sales/${item.id}`)}
+                      onClick={() => history.push(`/sales/${item.id}/show`)}
                     >
                       <RemoveRedEye className={classes.icons} />
                     </Button>

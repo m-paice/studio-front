@@ -106,7 +106,7 @@ export const subs = [
     name: "Atualizar vendas",
   },
   {
-    path: "/sales/:id",
+    path: "/sales/:id/show",
     component: SalesView,
     name: "Visualizar venda",
   },
