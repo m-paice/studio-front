@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import { getMonth, getWeeksInMonth, getYear, lastDayOfMonth } from "date-fns";
 
 import { formatDate } from "../../utils/formatDate";
+import { useToggle } from "../../hooks/useToggle";
 import { Loading } from "../../components/Loading";
 import { makeStyles } from "@material-ui/core";
+import { ModalDialog } from "../ModalDialog";
+import { ScheduleItem } from "../ScheduleItem";
+import { useEffect } from "react";
 
 const colors = {
   warning: "#ff9800",
@@ -62,10 +66,33 @@ const useStyles = makeStyles(styles);
 
 const daysOfWeek = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"];
 
-export function Month({ data }) {
+const months = [
+  "janeiro",
+  "fevereiro",
+  "março",
+  "abril",
+  "maio",
+  "junho",
+  "julho",
+  "agosto",
+  "setembro",
+  "outubro",
+  "novembro",
+  "dezembro",
+];
+
+export function Month({ data, changeStatus }) {
   const classes = useStyles();
 
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDay, setSelectedDay] = useState("");
+
+  const [isOpen, changeIsOpen] = useToggle();
+
+  useEffect(() => {
+    if (selectedDay && handleScheduleOfDay(selectedDay).length > 0)
+      changeIsOpen();
+  }, [selectedDay]);
 
   const month = getMonth(selectedDate) + 1;
   const year = getYear(selectedDate);
@@ -78,20 +105,18 @@ export function Month({ data }) {
     return formatDate(new Date(`${month}-${day}-${year}`));
   };
 
+  const handleScheduleOfDay = (day) => {
+    return data.filter(
+      (item) => handleFormatDate(day) === formatDate(item.scheduleAt)
+    );
+  };
+
   const handleCheckScheduleOfDay = (day, status) => {
     return (
       data.filter(
         (item) =>
           item.status === status &&
           handleFormatDate(day) === formatDate(item.scheduleAt)
-      ).length || null
-    );
-  };
-
-  const handlScheduleOfDayLength = (day) => {
-    return (
-      data.filter(
-        (item) => handleFormatDate(day) === formatDate(item.scheduleAt)
       ).length || null
     );
   };
@@ -107,6 +132,25 @@ export function Month({ data }) {
           onChange={(e) => setSelectedDate(new Date(e.target.value))}
         />
       </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <span
+          style={{
+            fontWeight: "bold",
+            textTransform: "uppercase",
+            fontSize: 20,
+            margin: "15px 0",
+          }}
+        >
+          {" "}
+          {months[month - 1]}{" "}
+        </span>
+      </div>
 
       <div className={classes.days}>
         {daysOfWeek.map((item) => (
@@ -118,7 +162,11 @@ export function Month({ data }) {
           {daysOfWeek.map((item, column) => {
             if (line === 0) {
               return (
-                <div key={item} className={classes.column}>
+                <div
+                  key={item}
+                  className={classes.column}
+                  onClick={() => setSelectedDay(column + 1 - firstDayOfMonth)}
+                >
                   {column < firstDayOfMonth ? null : (
                     <div style={{ padding: 5 }}>
                       <div
@@ -183,7 +231,13 @@ export function Month({ data }) {
             }
 
             return (
-              <div key={item} className={classes.column}>
+              <div
+                key={item}
+                className={classes.column}
+                onClick={() =>
+                  setSelectedDay(column + 1 + line * 7 - firstDayOfMonth)
+                }
+              >
                 {column + 1 + line * 7 - firstDayOfMonth > lastDay ? null : (
                   <div style={{ padding: 5 }}>
                     <div
@@ -259,6 +313,24 @@ export function Month({ data }) {
           <span style={badge("danger")} /> agendamento cancelados
         </p>
       </div>
+
+      <ModalDialog
+        isOpen={isOpen}
+        handleToggle={changeIsOpen}
+        size="lg"
+        handleClear={() => setSelectedDay("")}
+      >
+        {selectedDay &&
+          handleScheduleOfDay(selectedDay)
+            .sort((a, b) => (a.scheduleAt > b.scheduleAt ? 1 : -1))
+            .map((item) => (
+              <ScheduleItem
+                key={item.id}
+                item={item}
+                changeStatus={changeStatus}
+              />
+            ))}
+      </ModalDialog>
     </div>
   );
 }

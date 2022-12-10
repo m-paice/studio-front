@@ -207,15 +207,39 @@ export function Schedules() {
           </div>
 
           <div style={{ display: "flex", gap: 12 }}>
-            <p onClick={() => setView("week")}> Semana </p>
-            <p onClick={() => setView("month")}> Mês </p>
+            <p
+              style={{
+                border: "1px solid #fff",
+                borderRadius: 2,
+                padding: "5px 15px",
+                cursor: "pointer",
+              }}
+              onClick={() => setView("week")}
+            >
+              {" "}
+              Semana{" "}
+            </p>
+            <p
+              style={{
+                border: "1px solid #fff",
+                borderRadius: 2,
+                padding: "5px 28px",
+                cursor: "pointer",
+              }}
+              onClick={() => setView("month")}
+            >
+              {" "}
+              Mês{" "}
+            </p>
           </div>
         </CardHeader>
 
         <CardBody>
           {isOpenFilters && <Filters handleSetFilters={handleSetFilters} />}
 
-          {view === "month" && <Month data={value} />}
+          {view === "month" && (
+            <Month data={value} changeStatus={changeStatus} />
+          )}
 
           {view === "week" && (
             <>
