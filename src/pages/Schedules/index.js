@@ -18,6 +18,7 @@ import { useToggle } from "../../hooks/useToggle";
 import { scheduleResource } from "../../services/schedules";
 import { Filters } from "./Filters";
 import { Helmet } from "../../components/Helmet";
+import { Month } from "../../components/Month";
 
 const styles = {
   cardCategoryWhite: {
@@ -80,6 +81,7 @@ const useStyles = makeStyles(styles);
 export function Schedules() {
   const classes = useStyles();
 
+  const [view, setView] = useState("week");
   const [date, setDate] = useState(new Date());
   const [dateOfWeek, setDateOfWeek] = useState([]);
   const [data, setData] = useState({});
@@ -203,73 +205,89 @@ export function Schedules() {
               </div>
             </GridItem>
           </div>
+
+          <div style={{ display: "flex", gap: 12 }}>
+            <p onClick={() => setView("week")}> Semana </p>
+            <p onClick={() => setView("month")}> Mês </p>
+          </div>
         </CardHeader>
 
         <CardBody>
           {isOpenFilters && <Filters handleSetFilters={handleSetFilters} />}
 
-          <GridContainer>
-            <GridItem>
-              Visualizar semana{" "}
-              <input
-                type="date"
-                onChange={(event) => setDate(new Date(event.target.value))}
-              />
-            </GridItem>
-          </GridContainer>
+          {view === "month" && <Month data={value} />}
 
-          <h4> Agendamentos da semana </h4>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 10,
-            }}
-          >
-            {daysOfWeek.map((item, index) => {
-              return (
-                <div key={index} style={styles.wrapper}>
-                  <div style={styles.content}>
-                    <span> {item} </span>
-                    <span>
-                      {" "}
-                      {dateOfWeek.length &&
-                        format(dateOfWeek[index], "dd/MM")}{" "}
-                    </span>
-                    {dateOfWeek.length &&
-                      data.hasOwnProperty(
-                        format(dateOfWeek[index], "dd/MM/yyyy")
-                      ) && (
-                        <span style={styles.count}>
-                          {data[format(dateOfWeek[index], "dd/MM/yyyy")].length}
+          {view === "week" && (
+            <>
+              <GridContainer>
+                <GridItem>
+                  Visualizar semana{" "}
+                  <input
+                    type="date"
+                    onChange={(event) => setDate(new Date(event.target.value))}
+                  />
+                </GridItem>
+              </GridContainer>
+
+              <h4> Agendamentos da semana </h4>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 10,
+                }}
+              >
+                {daysOfWeek.map((item, index) => {
+                  return (
+                    <div key={index} style={styles.wrapper}>
+                      <div style={styles.content}>
+                        <span> {item} </span>
+                        <span>
+                          {" "}
+                          {dateOfWeek.length &&
+                            format(dateOfWeek[index], "dd/MM")}{" "}
                         </span>
-                      )}
-                  </div>
+                        {dateOfWeek.length &&
+                          data.hasOwnProperty(
+                            format(dateOfWeek[index], "dd/MM/yyyy")
+                          ) && (
+                            <span style={styles.count}>
+                              {
+                                data[format(dateOfWeek[index], "dd/MM/yyyy")]
+                                  .length
+                              }
+                            </span>
+                          )}
+                      </div>
 
-                  <div>
-                    {status === "pending" ? (
-                      <Skeleton lines={Math.floor(Math.random() * 10)} />
-                    ) : (
-                      dateOfWeek.length &&
-                      data.hasOwnProperty(
-                        format(dateOfWeek[index], "dd/MM/yyyy")
-                      ) &&
-                      data[format(dateOfWeek[index], "dd/MM/yyyy")]
-                        .sort((a, b) => (a.scheduleAt > b.scheduleAt ? 1 : -1))
-                        .map((item) => (
-                          <ScheduleItem
-                            key={item.id}
-                            item={item}
-                            changeStatus={changeStatus}
-                          />
-                        ))
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                      <div>
+                        {status === "pending" ? (
+                          <Skeleton lines={Math.floor(Math.random() * 10)} />
+                        ) : (
+                          dateOfWeek.length &&
+                          data.hasOwnProperty(
+                            format(dateOfWeek[index], "dd/MM/yyyy")
+                          ) &&
+                          data[format(dateOfWeek[index], "dd/MM/yyyy")]
+                            .sort((a, b) =>
+                              a.scheduleAt > b.scheduleAt ? 1 : -1
+                            )
+                            .map((item) => (
+                              <ScheduleItem
+                                key={item.id}
+                                item={item}
+                                changeStatus={changeStatus}
+                              />
+                            ))
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </CardBody>
       </Card>
     </div>
