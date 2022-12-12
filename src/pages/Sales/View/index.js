@@ -49,7 +49,7 @@ export function SalesView() {
               <div key={item.id}>
                 <b> Nome: </b>
                 <span> {item.name} </span>
-                <b> Quantidade: </b> <span> {item.amount} </span>
+                <b> Quantidade: </b> <span> {item.ProductSale.amount} </span>
                 <b> Preço: </b> <span> {formatPrice(item.price)} </span>
                 <b>Desconto: </b>{" "}
                 <span> {formatPrice(item.ProductSale.discount)} </span>

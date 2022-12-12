@@ -20,6 +20,7 @@ import { productResource } from "../../../services/products";
 import { Skeleton } from "../../../components/Skeleton";
 import { Loading } from "../../../components/Loading";
 import { SelectAsync } from "../../../components/CustomInput/SelectAsync";
+import { formatPrice } from "../../../utils/formatPrice";
 
 const styles = {
   cardCategoryWhite: {
@@ -368,10 +369,11 @@ export function SalesForm() {
                         }}
                       />,
                       <h4 key={item.id}>
-                        R${" "}
-                        {item.amount * item.price -
-                          item.discount +
-                          item.addition}
+                        {formatPrice(
+                          item.amount * item.price -
+                            item.discount +
+                            item.addition
+                        )}
                       </h4>,
                       <div key={item.id}>
                         <Button
@@ -460,8 +462,8 @@ export function SalesForm() {
                   />
 
                   <div>
-                    <b> Subtotal: </b> R${" "}
-                    {(total / Number(fields.amountParcel)).toFixed(2)}
+                    <b> Subtotal: </b>{" "}
+                    {formatPrice(total / Number(fields.amountParcel))}
                   </div>
                 </div>
               )}
@@ -475,7 +477,7 @@ export function SalesForm() {
               justifyContent: "flex-end",
             }}
           >
-            <h4> Total: R$ {total} </h4>
+            <h4> Total: {formatPrice(total)} </h4>
           </div>
         </CardBody>
         <CardFooter>

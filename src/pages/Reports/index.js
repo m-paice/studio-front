@@ -112,6 +112,8 @@ export function Reports() {
     return subtotal;
   };
 
+  const isSales = user?.account?.type === "sales";
+
   return (
     <div>
       <Helmet title="Relatórios" />
@@ -167,7 +169,7 @@ export function Reports() {
       <GridContainer>
         <GridItem xs={12} sm={6} md={6}>
           <GridContainer>
-            <GridItem xs={12} sm={6} md={6}>
+            <GridItem xs={12} sm={isSales ? 12 : 6} md={isSales ? 12 : 6}>
               {status === "pending" ? (
                 <div style={{ marginBottom: 60 }}>
                   <Skeleton lines={2} />
@@ -208,7 +210,7 @@ export function Reports() {
               )}
             </GridItem>
 
-            <GridItem xs={12} sm={6} md={6}>
+            <GridItem xs={12} sm={isSales ? 12 : 6} md={isSales ? 12 : 6}>
               {status === "pending" ? (
                 <div style={{ marginBottom: 60 }}>
                   <Skeleton lines={2} />
@@ -246,140 +248,146 @@ export function Reports() {
             </GridItem>
           </GridContainer>
 
-          <GridContainer>
-            <GridItem xs={12} sm={6} md={6}>
-              {status === "pending" ? (
-                <div style={{ marginBottom: 60 }}>
-                  <Skeleton lines={2} />
-                </div>
-              ) : (
-                <Card>
-                  <CardHeader color="success" stats icon>
-                    <CardIcon color="success">
-                      <Schedule />
-                    </CardIcon>
-                    <p className={classes.cardCategory}>
-                      Agendamentos confirmados
-                    </p>
-                    <h3 className={classes.cardTitle}>
-                      {value?.countFinished || 0}
-                    </h3>
-                  </CardHeader>
-                  <CardFooter stats>
-                    <div className={classes.stats}></div>
-                  </CardFooter>
-                </Card>
-              )}
-            </GridItem>
+          {user?.account?.type === "sales" ? null : (
+            <GridContainer>
+              <GridItem xs={12} sm={6} md={6}>
+                {status === "pending" ? (
+                  <div style={{ marginBottom: 60 }}>
+                    <Skeleton lines={2} />
+                  </div>
+                ) : (
+                  <Card>
+                    <CardHeader color="success" stats icon>
+                      <CardIcon color="success">
+                        <Schedule />
+                      </CardIcon>
+                      <p className={classes.cardCategory}>
+                        Agendamentos confirmados
+                      </p>
+                      <h3 className={classes.cardTitle}>
+                        {value?.countFinished || 0}
+                      </h3>
+                    </CardHeader>
+                    <CardFooter stats>
+                      <div className={classes.stats}></div>
+                    </CardFooter>
+                  </Card>
+                )}
+              </GridItem>
 
-            <GridItem xs={12} sm={6} md={6}>
-              {status === "pending" ? (
-                <div style={{ marginBottom: 60 }}>
-                  <Skeleton lines={2} />
-                </div>
-              ) : (
-                <Card>
-                  <CardHeader color="danger" stats icon>
-                    <CardIcon color="danger">
-                      <Schedule />
-                    </CardIcon>
-                    <p className={classes.cardCategory}>
-                      Agendamentos cancelados
-                    </p>
-                    <h3 className={classes.cardTitle}>
-                      {value?.countCanceled || 0}
-                    </h3>
-                  </CardHeader>
-                  <CardFooter stats>
-                    <div className={classes.stats}></div>
-                  </CardFooter>
-                </Card>
-              )}
-            </GridItem>
-          </GridContainer>
+              <GridItem xs={12} sm={6} md={6}>
+                {status === "pending" ? (
+                  <div style={{ marginBottom: 60 }}>
+                    <Skeleton lines={2} />
+                  </div>
+                ) : (
+                  <Card>
+                    <CardHeader color="danger" stats icon>
+                      <CardIcon color="danger">
+                        <Schedule />
+                      </CardIcon>
+                      <p className={classes.cardCategory}>
+                        Agendamentos cancelados
+                      </p>
+                      <h3 className={classes.cardTitle}>
+                        {value?.countCanceled || 0}
+                      </h3>
+                    </CardHeader>
+                    <CardFooter stats>
+                      <div className={classes.stats}></div>
+                    </CardFooter>
+                  </Card>
+                )}
+              </GridItem>
+            </GridContainer>
+          )}
 
-          <GridContainer>
-            <GridItem xs={12} sm={6} md={6}>
-              {status === "pending" ? (
-                <div style={{ marginBottom: 60 }}>
-                  <Skeleton lines={2} />
-                </div>
-              ) : (
-                <Card>
-                  <CardHeader color="info" stats icon>
-                    <CardIcon color="info">
-                      <AccountBox />
-                    </CardIcon>
-                    <p className={classes.cardCategory}>Novos clientes</p>
-                    <h3 className={classes.cardTitle}>
-                      {" "}
-                      {value?.countUsers || 0}
-                    </h3>
-                  </CardHeader>
-                  <CardFooter stats>
-                    <div className={classes.stats}></div>
-                  </CardFooter>
-                </Card>
-              )}
-            </GridItem>
+          {user?.account?.type === "sales" ? null : (
+            <GridContainer>
+              <GridItem xs={12} sm={6} md={6}>
+                {status === "pending" ? (
+                  <div style={{ marginBottom: 60 }}>
+                    <Skeleton lines={2} />
+                  </div>
+                ) : (
+                  <Card>
+                    <CardHeader color="info" stats icon>
+                      <CardIcon color="info">
+                        <AccountBox />
+                      </CardIcon>
+                      <p className={classes.cardCategory}>Novos clientes</p>
+                      <h3 className={classes.cardTitle}>
+                        {" "}
+                        {value?.countUsers || 0}
+                      </h3>
+                    </CardHeader>
+                    <CardFooter stats>
+                      <div className={classes.stats}></div>
+                    </CardFooter>
+                  </Card>
+                )}
+              </GridItem>
 
-            <GridItem xs={12} sm={6} md={6}>
-              {status === "pending" ? (
-                <div style={{ marginBottom: 60 }}>
-                  <Skeleton lines={2} />
-                </div>
-              ) : (
-                <Card>
-                  <CardHeader color="info" stats icon>
-                    <CardIcon color="info">
-                      <MonetizationOn />
-                    </CardIcon>
-                    <p className={classes.cardCategory}>
-                      Sugestão compra de produtos
-                    </p>
-                    <h3 className={classes.cardTitle}>
-                      {" "}
-                      {formatPrice(value?.productPriceSugestion)}
-                    </h3>
-                  </CardHeader>
-                  <CardFooter stats>
-                    <div className={classes.stats}></div>
-                  </CardFooter>
-                </Card>
-              )}
-            </GridItem>
-          </GridContainer>
-        </GridItem>
-
-        <GridItem xs={12} sm={6} md={6}>
-          {status === "pending" ? (
-            <Skeleton lines={5} />
-          ) : (
-            <Card>
-              <CardHeader color="warning">
-                <h4 className={classes.cardTitleWhite}>
-                  Serviços mais procurados
-                </h4>
-                <p className={classes.cardCategoryWhite}>
-                  acompanhe os serviços mais procuras
-                </p>
-              </CardHeader>
-              <CardBody>
-                <Table
-                  tableHeaderColor="warning"
-                  tableHead={["Posição", "Nome", "Quantidade"]}
-                  tableData={
-                    value?.serviceCount.map((item, index) => [
-                      index + 1,
-                      item.name,
-                      item.value,
-                    ]) || []
-                  }
-                />
-              </CardBody>
-            </Card>
+              <GridItem xs={12} sm={6} md={6}>
+                {status === "pending" ? (
+                  <div style={{ marginBottom: 60 }}>
+                    <Skeleton lines={2} />
+                  </div>
+                ) : (
+                  <Card>
+                    <CardHeader color="info" stats icon>
+                      <CardIcon color="info">
+                        <MonetizationOn />
+                      </CardIcon>
+                      <p className={classes.cardCategory}>
+                        Sugestão compra de produtos
+                      </p>
+                      <h3 className={classes.cardTitle}>
+                        {" "}
+                        {formatPrice(value?.productPriceSugestion)}
+                      </h3>
+                    </CardHeader>
+                    <CardFooter stats>
+                      <div className={classes.stats}></div>
+                    </CardFooter>
+                  </Card>
+                )}
+              </GridItem>
+            </GridContainer>
           )}
         </GridItem>
+
+        {user?.account?.type === "sales" ? null : (
+          <GridItem xs={12} sm={6} md={6}>
+            {status === "pending" ? (
+              <Skeleton lines={5} />
+            ) : (
+              <Card>
+                <CardHeader color="warning">
+                  <h4 className={classes.cardTitleWhite}>
+                    Serviços mais procurados
+                  </h4>
+                  <p className={classes.cardCategoryWhite}>
+                    acompanhe os serviços mais procuras
+                  </p>
+                </CardHeader>
+                <CardBody>
+                  <Table
+                    tableHeaderColor="warning"
+                    tableHead={["Posição", "Nome", "Quantidade"]}
+                    tableData={
+                      value?.serviceCount.map((item, index) => [
+                        index + 1,
+                        item.name,
+                        item.value,
+                      ]) || []
+                    }
+                  />
+                </CardBody>
+              </Card>
+            )}
+          </GridItem>
+        )}
       </GridContainer>
     </div>
   );
