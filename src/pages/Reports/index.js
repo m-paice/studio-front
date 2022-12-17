@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import subDays from "date-fns/subDays";
 import addDays from "date-fns/addDays";
 import format from "date-fns/format";
+import { AddCircle, Delete } from "@material-ui/icons";
 
 import MonetizationOn from "@material-ui/icons/MonetizationOn";
 import Schedule from "@material-ui/icons/Schedule";
@@ -18,6 +20,7 @@ import GridItem from "../../components/Grid/GridItem";
 import Button from "../../components/CustomButtons/Button";
 import CardBody from "../../components/Card/CardBody";
 import Table from "../../components/Table/Table";
+import { Loading } from "../../components/Loading";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import { useAsync } from "../../hooks/useAsync";
 import { useForm } from "../../hooks/useForm";
@@ -27,6 +30,7 @@ import { useAuthContext } from "../../context/Auth";
 
 import styles from "../../assets/jss/material-dashboard-react/views/dashboardStyle.js";
 import { Helmet } from "../../components/Helmet";
+import { NavLink } from "react-router-dom";
 
 const useStyles = makeStyles(styles);
 
@@ -39,24 +43,38 @@ export function Reports() {
   const classes = useStyles();
 
   const { execute, value, status } = useAsync(reportsResource.reports);
+  const { execute: execDestroy, status: statusDestroy } = useAsync(
+    reportsResource.destroyById
+  );
 
   const { user } = useAuthContext();
+
+  const history = useHistory();
 
   const [fields, setField, setAllFields] = useForm(initialValues);
 
   const [openDetailsEntry, handleToggleOpenDetailsEntry] = useToggle();
   const [openDetailsOut, handleToggleOpenDetailsOut] = useToggle();
 
-  const isSaleAccount = user.account.type === "sales";
+  const isSaleAccount = user?.account?.type === "sales";
 
   const handleSubmit = () => {
+    const startAt = fields.startAt.split("-");
+    const endAt = fields.endAt.split("-");
+
     const payload = {
-      startAt: fields.startAt,
-      endAt: fields.endAt,
+      startAt: new Date(`${startAt[1]}-${startAt[2]}-${startAt[0]}`).setHours(
+        0
+      ),
+      endAt: new Date(`${endAt[1]}-${endAt[2]}-${endAt[0]}`).setHours(23),
       type: isSaleAccount ? "sales" : "schedules",
     };
 
     execute(payload);
+  };
+
+  const handleDestroyById = (id) => {
+    execDestroy(id);
   };
 
   const formatPrice = (value = 0) => {
@@ -68,7 +86,7 @@ export function Reports() {
     });
   };
 
-  useEffect(() => {
+  const handleLoadData = () => {
     const currentDate = new Date();
 
     const getCurrentDay = currentDate.getDay();
@@ -96,7 +114,15 @@ export function Reports() {
       startAt: format(response[0], "yyyy-MM-dd"),
       endAt: format(response[6], "yyyy-MM-dd"),
     });
+  };
+
+  useEffect(() => {
+    handleLoadData();
   }, []);
+
+  useEffect(() => {
+    if (statusDestroy === "success") handleLoadData();
+  }, [statusDestroy]);
 
   const handleRealPrice = (total = 0, discount = 0, addition = 0) => {
     let subtotal = total;
@@ -117,6 +143,20 @@ export function Reports() {
   return (
     <div>
       <Helmet title="Relatórios" />
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <h4> Relatórios </h4>
+        <NavLink to="/reports/create">
+          <Button color="info">
+            <AddCircle className={classes.icons} /> registro de saída
+          </Button>
+        </NavLink>
+      </div>
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
           <Card>
@@ -235,10 +275,21 @@ export function Reports() {
                     {openDetailsOut && (
                       <Table
                         tableHeaderColor="info"
-                        tableHead={["Funcionário", "Valor"]}
-                        tableData={(value?.employeeInfo || []).map((item) => [
-                          `${item.schedule.employee.name} (${item.schedule.service.name})`,
+                        tableHead={["Descrição", "Valor", "Ação"]}
+                        tableData={(value?.registerInfo || []).map((item) => [
+                          item.description,
                           item.out,
+                          <Button
+                            key={item.id}
+                            color="danger"
+                            justIcon={window.innerWidth > 959}
+                            simple={!(window.innerWidth > 959)}
+                            aria-label="Dashboard"
+                            className={classes.buttonLink}
+                            onClick={() => handleDestroyById(item.id)}
+                          >
+                            <Delete className={classes.icons} />
+                          </Button>,
                         ])}
                       />
                     )}

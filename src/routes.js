@@ -29,6 +29,7 @@ import { Sales } from "./pages/Sales";
 import { SalesForm } from "./pages/Sales/Form";
 import { SalesView } from "./pages/Sales/View";
 import { Profile } from "./pages/Profile/index.js";
+import { ReportForm } from "./pages/Reports/Form/index.js";
 
 export const subs = [
   { path: "/users/create", component: UsersForm, name: "Novo usuário" },
@@ -109,6 +110,11 @@ export const subs = [
     path: "/sales/:id/show",
     component: SalesView,
     name: "Visualizar venda",
+  },
+  {
+    path: "/reports/create",
+    component: ReportForm,
+    name: "Nova saída",
   },
 ];
 
