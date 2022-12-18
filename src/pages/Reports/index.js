@@ -105,8 +105,8 @@ export function Reports() {
     ];
 
     execute({
-      startAt: response[0],
-      endAt: response[6],
+      startAt: response[0].setHours(0),
+      endAt: response[6].setHours(23),
       type: isSaleAccount ? "sales" : "schedules",
     });
 
