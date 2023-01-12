@@ -276,21 +276,23 @@ export function Reports() {
                       <Table
                         tableHeaderColor="info"
                         tableHead={["Descrição", "Valor", "Ação"]}
-                        tableData={(value?.registerInfo || []).map((item) => [
-                          item.description,
-                          item.out,
-                          <Button
-                            key={item.id}
-                            color="danger"
-                            justIcon={window.innerWidth > 959}
-                            simple={!(window.innerWidth > 959)}
-                            aria-label="Dashboard"
-                            className={classes.buttonLink}
-                            onClick={() => handleDestroyById(item.id)}
-                          >
-                            <Delete className={classes.icons} />
-                          </Button>,
-                        ])}
+                        tableData={(value?.registerInfo || [])
+                          .filter((item) => Boolean(item.description))
+                          .map((item) => [
+                            item.description,
+                            item.out,
+                            <Button
+                              key={item.id}
+                              color="danger"
+                              justIcon={window.innerWidth > 959}
+                              simple={!(window.innerWidth > 959)}
+                              aria-label="Dashboard"
+                              className={classes.buttonLink}
+                              onClick={() => handleDestroyById(item.id)}
+                            >
+                              <Delete className={classes.icons} />
+                            </Button>,
+                          ])}
                       />
                     )}
                   </CardFooter>
