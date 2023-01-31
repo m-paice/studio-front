@@ -10,7 +10,7 @@ const token = () => localStorage.getItem("token");
 
 export function getApi() {
   return axios.create({
-    baseURL: `${nodeEnv["production"]}/api/v1`,
+    baseURL: `${nodeEnv["development"]}/api/v1`,
     paramsSerializer: (params) => qs.stringify(params),
     headers: {
       Authorization: `Bearer ${token()}`,

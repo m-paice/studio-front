@@ -8,7 +8,7 @@ import Store from "@material-ui/icons/Store";
 import BubbleChart from "@material-ui/icons/BubbleChart";
 import AccountBalance from "@material-ui/icons/AccountBalance";
 
-import DashboardPage from "./views/Dashboard/Dashboard.js";
+import DashboardPage from "./views/Dashboard/Dashboard";
 import { Reports } from "./pages/Reports";
 import { Services } from "./pages/Services";
 import { Users } from "./pages/Users";
@@ -27,7 +27,7 @@ import { UsersAdmin } from "./pages/UsersAdmin";
 import { UsersAdminForm } from "./pages/UsersAdmin/Form";
 import { Sales } from "./pages/Sales";
 import { SalesForm } from "./pages/Sales/Form";
-import { Profile } from "./pages/Profile/index.js";
+import { Profile } from "./pages/Profile/index";
 
 export const subs = [
   { path: "/users/create", component: UsersForm, name: "Novo usuário" },
