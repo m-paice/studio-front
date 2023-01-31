@@ -14,8 +14,8 @@ import CardFooter from "../../../components/Card/CardFooter";
 import { useAsync } from "../../../hooks/useAsync";
 import { useForm } from "../../../hooks/useForm";
 import { accountResource } from "../../../services/accounts";
-import { Select } from "../../../components/CustomInput/Select.js";
 import { Loading } from "../../../components/Loading";
+import { Select } from "../../../components/CustomInput/Select";
 
 const styles = {
   cardCategoryWhite: {

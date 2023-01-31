@@ -19,11 +19,11 @@ import Search from "@material-ui/icons/Search";
 import ListIcon from "@material-ui/icons/List";
 import MoreVert from "@material-ui/icons/MoreVert";
 // core components
-import CustomInput from "../CustomInput/CustomInput.js";
+import CustomInput from "../CustomInput/CustomInput";
 import Button from "../CustomButtons/Button";
 
-import styles from "../../assets/jss/material-dashboard-react/components/headerLinksStyle.js";
-import { useAuthContext } from "../../context/Auth.js";
+import styles from "../../assets/jss/material-dashboard-react/components/headerLinksStyle";
+import { useAuthContext } from "../../context/Auth";
 
 import logo from "../../assets/img/logo.png";
 

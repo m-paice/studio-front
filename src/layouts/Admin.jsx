@@ -8,12 +8,12 @@ import PerfectScrollbar from "perfect-scrollbar";
 import { makeStyles } from "@material-ui/core/styles";
 // core components
 import Navbar from "../components/Navbars/Navbar";
-import Footer from "../components/Footer/Footer.js";
-import Sidebar from "../components/Sidebar/Sidebar.js";
+import Footer from "../components/Footer/Footer";
+import Sidebar from "../components/Sidebar/Sidebar";
 
 import routes, { subs } from "../routes";
 
-import styles from "../assets/jss/material-dashboard-react/layouts/adminStyle.js";
+import styles from "../assets/jss/material-dashboard-react/layouts/adminStyle";
 
 import bgImage from "../assets/img/sidebar-2.jpg";
 import logo from "../assets/img/reactlogo.png";
