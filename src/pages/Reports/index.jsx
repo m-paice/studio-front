@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import subDays from "date-fns/subDays";
 import addDays from "date-fns/addDays";
 import format from "date-fns/format";
-import { AddCircle, Delete } from "@material-ui/icons";
+import { AddCircle } from "@material-ui/icons";
 
 import MonetizationOn from "@material-ui/icons/MonetizationOn";
-import Schedule from "@material-ui/icons/Schedule";
-import AccountBox from "@material-ui/icons/AccountBox";
 import { makeStyles } from "@material-ui/core";
 
 import Card from "../../components/Card/Card";
@@ -19,8 +17,6 @@ import GridContainer from "../../components/Grid/GridContainer";
 import GridItem from "../../components/Grid/GridItem";
 import Button from "../../components/CustomButtons/Button";
 import CardBody from "../../components/Card/CardBody";
-import Table from "../../components/Table/Table";
-import { Loading } from "../../components/Loading";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import { useAsync } from "../../hooks/useAsync";
 import { useForm } from "../../hooks/useForm";
@@ -31,6 +27,8 @@ import { useAuthContext } from "../../context/Auth";
 import styles from "../../assets/jss/material-dashboard-react/views/dashboardStyle.js";
 import { Helmet } from "../../components/Helmet";
 import { NavLink } from "react-router-dom";
+import { ModalDialog } from "../../components/ModalDialog";
+import { formatDate } from "../../utils/formatDate";
 
 const useStyles = makeStyles(styles);
 
@@ -48,7 +46,8 @@ export function Reports() {
   );
 
   const { user } = useAuthContext();
-
+  const [isOpenEntry, handleToggleIsOpenEntry] = useToggle();
+  const [isOpenOut, handleToggleIsOpenOut] = useToggle();
   const history = useHistory();
 
   const [fields, setField, setAllFields] = useForm(initialValues);
@@ -75,8 +74,6 @@ export function Reports() {
   };
 
   const formatPrice = (value = 0) => {
-    if (!value) return 0;
-
     return value.toLocaleString("pt-BR", {
       style: "currency",
       currency: "BRL",
@@ -120,6 +117,12 @@ export function Reports() {
   useEffect(() => {
     if (statusDestroy === "success") handleLoadData();
   }, [statusDestroy]);
+
+  const dataEntry = value?.data.filter((item) => Boolean(item.entry)) || [];
+  const dataOut = value?.data.filter((item) => Boolean(item.out)) || [];
+
+  const valueEntry = dataEntry.reduce((acc, cur) => acc + cur.entry, 0);
+  const valueOut = dataOut.reduce((acc, cur) => acc + cur.out, 0);
 
   return (
     <div>
@@ -203,11 +206,17 @@ export function Reports() {
                     </CardIcon>
                     <p className={classes.cardCategory}>Entradas</p>
                     <h3 className={classes.cardTitle}>
-                      {formatPrice(value?.entry)}
+                      {formatPrice(valueEntry || 0)}
                     </h3>
                   </CardHeader>
                   <CardFooter stats>
                     <div className={classes.stats}></div>
+                    <a
+                      style={{ cursor: "pointer" }}
+                      onClick={handleToggleIsOpenEntry}
+                    >
+                      Ver mais
+                    </a>
                   </CardFooter>
                 </Card>
               )}
@@ -226,11 +235,17 @@ export function Reports() {
                     </CardIcon>
                     <p className={classes.cardCategory}>Saídas</p>
                     <h3 className={classes.cardTitle}>
-                      {formatPrice(value?.out)}
+                      {formatPrice(valueOut || 0)}
                     </h3>
                   </CardHeader>
                   <CardFooter stats>
                     <div className={classes.stats}></div>
+                    <a
+                      style={{ cursor: "pointer" }}
+                      onClick={handleToggleIsOpenOut}
+                    >
+                      Ver mais
+                    </a>
                   </CardFooter>
                 </Card>
               )}
@@ -238,6 +253,75 @@ export function Reports() {
           </GridContainer>
         </GridItem>
       </GridContainer>
+
+      <ModalDialog
+        title="Relatório de entradas"
+        isOpen={isOpenEntry}
+        handleToggle={handleToggleIsOpenEntry}
+        size="md"
+      >
+        <div style={{ padding: 7 }}>
+          {dataEntry.map((item) => (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                borderBottom: "1px solid #e6e6e6",
+                marginBottom: 20,
+                paddingRight: 15,
+              }}
+              key={item.id}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  gap: 20,
+                }}
+              >
+                <span>{formatDate(item.createdAt)}</span>
+                <span>{item.schedule?.user?.name || "Desconhecido"}</span>
+                {item.schedule.services.map((item) => item.name).join(" - ")}
+              </div>
+              <span>{formatPrice(item.entry)}</span>
+            </div>
+          ))}
+        </div>
+      </ModalDialog>
+
+      <ModalDialog
+        title="Relatório de saídas"
+        isOpen={isOpenOut}
+        handleToggle={handleToggleIsOpenOut}
+        size="md"
+      >
+        <div style={{ overflowY: "auto" }}>
+          {dataOut.map((item) => (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                borderBottom: "1px solid #e6e6e6",
+                marginBottom: 20,
+                paddingRight: 15,
+              }}
+              key={item.id}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  gap: 20,
+                }}
+              >
+                <span>{formatDate(item.createdAt)}</span>
+                <span>{item.description}</span>
+              </div>
+              <span>{formatPrice(item.out)}</span>
+            </div>
+          ))}
+        </div>
+      </ModalDialog>
     </div>
   );
 }

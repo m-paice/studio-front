@@ -39,7 +39,7 @@ export const Content = styled.div`
   width: ${(props) => sizes[props.size].with};
   height: ${(props) => sizes[props.size].height};
 
-  padding: 30px;
+  padding: 0px 15px;
 
   background: #fff;
   border-radius: 20px;
