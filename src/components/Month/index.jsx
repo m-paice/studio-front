@@ -101,8 +101,8 @@ export function Month({ data, changeStatus }) {
   const getWeeks = getWeeksInMonth(selectedDate);
   const lastDay = lastDayOfMonth(selectedDate).getDate();
 
-  const handleFormatDate = (day) => {
-    return formatDate(new Date(`${month}-${day}-${year}`));
+  const handleFormatDate = (day, format = "dd/MM/yyyy") => {
+    return formatDate(`${month}-${day}-${year}`, format);
   };
 
   const handleScheduleOfDay = (day) => {
@@ -319,6 +319,9 @@ export function Month({ data, changeStatus }) {
         handleToggle={changeIsOpen}
         size="lg"
         handleClear={() => setSelectedDay("")}
+        title={`Agendamentos do dia ${
+          selectedDay && handleFormatDate(selectedDay, "dd/MMMM")
+        }`}
       >
         {selectedDay &&
           handleScheduleOfDay(selectedDay)

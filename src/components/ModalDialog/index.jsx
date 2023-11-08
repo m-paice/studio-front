@@ -22,7 +22,7 @@ export function ModalDialog({
           <Transition.Child as={Fragment}>
             <Dialog.Panel>
               <S.Content size={size}>
-                {title && <Dialog.Title>{title}</Dialog.Title>}
+                {title && <h4>{title}</h4>}
                 <section className="content">{children}</section>
               </S.Content>
             </Dialog.Panel>

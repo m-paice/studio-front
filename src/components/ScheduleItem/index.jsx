@@ -22,6 +22,7 @@ export function ScheduleItem({ item, changeStatus }) {
       style={{
         borderBottom: "1px solid",
         marginBottom: 20,
+        paddingRight: 15,
       }}
     >
       <div>
