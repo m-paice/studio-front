@@ -8,6 +8,7 @@ import CardHeader from "../../components/Card/CardHeader";
 import RegularButton from "../../components/CustomButtons/Button";
 import { Helmet } from "../../components/Helmet";
 import CustomInput from "../../components/CustomInput/CustomInput";
+import { Loading } from "../../components/Loading";
 
 import { useAuthContext } from "../../context/Auth";
 import { useAsync } from "../../hooks/useAsync";
@@ -44,8 +45,6 @@ export function Login() {
     }
   }, [value]);
 
-  const invalidCredentials = error?.response?.data?.includes("credentials");
-
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -59,6 +58,7 @@ export function Login() {
 
   return (
     <form onSubmit={handleSubmit}>
+      {status === "pending" && <Loading message="Validando seus dados..." />}
       <Helmet title="Login" />
       <Card>
         <CardHeader
@@ -101,12 +101,23 @@ export function Login() {
           />
 
           <RegularButton color="info" type="submit">
-            {" "}
-            Entrar{" "}
+            Entrar
           </RegularButton>
         </CardBody>
-        <CardFooter>
-          {invalidCredentials && "Login e/ou senha incorretos"}
+        <CardFooter
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {error && (
+            <p style={{ color: "red", width: 400, textAlign: "center" }}>
+              Desculpe, mas as informações de login que você inseriu estão
+              incorretas. Por favor, verifique o nome de usuário e senha e tente
+              novamente.
+            </p>
+          )}
         </CardFooter>
       </Card>
     </form>
