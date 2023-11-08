@@ -106,16 +106,18 @@ export function SchedulesForm() {
   useEffect(() => {
     if (value) {
       setAllFields({
-        user: value?.user ? { label: value.user.name, value: value.user } : {},
+        user: value?.user
+          ? { label: value.user.name, value: value.user }
+          : null,
         service: value?.services.length
           ? { label: value.services[0]?.name, value: value.services[0] }
-          : {},
+          : null,
         employee: value?.employee
           ? { label: value.employee.name, value: value.employee }
-          : {},
+          : null,
         date: format(new Date(value.scheduleAt), "yyyy-MM-dd"),
         time: format(new Date(value.scheduleAt), "HH:mm"),
-        isPackage: value.services[0].ServiceSchedule.isPackage,
+        isPackage: value.services?.[0]?.ServiceSchedule.isPackage,
         discount: value.discount,
         addition: value.addition,
       });
@@ -126,16 +128,12 @@ export function SchedulesForm() {
     event.preventDefault();
 
     const validate = validateAllFields();
-
-    console.log(validate);
-
     if (!validate.isValid) {
       setErrors(validate.errors);
       return;
     }
 
     const scheduleAt = new Date(`${fields.date} ${fields.time}`);
-
     const payload = {
       ...fields,
       userId: fields.user.value.id,
@@ -144,9 +142,7 @@ export function SchedulesForm() {
       scheduleAt,
     };
 
-    if (id) {
-      return updateById(id, payload);
-    }
+    if (id) return updateById(id, payload);
 
     create(payload);
   };
@@ -212,7 +208,7 @@ export function SchedulesForm() {
                   clickOption={(value) => setField("user", value)}
                   placeholder="Pesquise um usuário"
                   defaultValue={
-                    isEditing
+                    isEditing && value?.user
                       ? { label: value?.user?.name, value: value?.user }
                       : null
                   }
@@ -228,7 +224,7 @@ export function SchedulesForm() {
                   clickOption={(value) => setField("service", value)}
                   placeholder="Pesquise um serviço"
                   defaultValue={
-                    isEditing
+                    isEditing && value?.services[0]
                       ? {
                           label: value?.services[0]?.name,
                           value: value?.services[0],

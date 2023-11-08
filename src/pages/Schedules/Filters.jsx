@@ -33,18 +33,19 @@ export function Filters({ handleSetFilters }) {
         />
       </GridItem>
 
-      <GridItem xs={12} sm={3} md={3}>
+      {/* <GridItem xs={12} sm={3} md={3}>
         <SelectAsync
           exec={serviceResource.findByName}
           clickOption={(value) => handleSetFilters("service", value)}
           placeholder="Pesquise um serviço"
         />
-      </GridItem>
+      </GridItem> */}
 
       <GridItem xs={12} sm={3} md={3}>
         <Select
           options={options}
           onChange={(value) => handleSetFilters("status", value)}
+          placeholder="Selecione um status"
         />
       </GridItem>
     </GridContainer>

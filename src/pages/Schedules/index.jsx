@@ -143,7 +143,7 @@ export function Schedules() {
       where: {
         ...(filters?.user && { userId: filters.user.value.id }),
         ...(filters?.employee && { employeeId: filters.employee.value.id }),
-        ...(filters?.service && { serviceId: filters.service.value.id }),
+        // ...(filters?.service && { serviceId: filters.service.value.id }),
         ...(filters?.status && { status: filters.status.value }),
       },
       perPage: 500,
@@ -227,7 +227,7 @@ export function Schedules() {
           {isOpenFilters && <Filters handleSetFilters={handleSetFilters} />}
 
           {view === "month" && (
-            <Month data={value.data} changeStatus={changeStatus} />
+            <Month data={value?.data} changeStatus={changeStatus} />
           )}
 
           {view === "week" && (
