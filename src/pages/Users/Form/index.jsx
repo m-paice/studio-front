@@ -46,6 +46,21 @@ const options = [
   { value: "pj", label: "Funcionário" },
 ];
 
+export const optionsBirthDate = [
+  { label: "Janeiro", value: "Janeiro" },
+  { label: "Fevereiro", value: "Fevereiro" },
+  { label: "Março", value: "Março" },
+  { label: "Abril", value: "Abril" },
+  { label: "Maio", value: "Maio" },
+  { label: "Junho", value: "Junho" },
+  { label: "Julho", value: "Julho" },
+  { label: "Agosto", value: "Agosto" },
+  { label: "Setembro", value: "Setembro" },
+  { label: "Outubro", value: "Outubro" },
+  { label: "Novembro", value: "Novembro" },
+  { label: "Dezembro", value: "Dezembro" },
+];
+
 const initialValues = {
   birthDate: "",
   name: "",
@@ -94,7 +109,9 @@ export function UsersForm() {
         name: user.name,
         cellPhone: user.cellPhone,
         type: options.find((item) => item.value === user.type),
-        birthDate: format(new Date(user.birthDate), "yyyy-MM-dd"),
+        birthDate: optionsBirthDate.find(
+          (item) => item.value === user.birthDate
+        ),
       });
     }
   }, [user]);
@@ -109,7 +126,7 @@ export function UsersForm() {
 
     const payload = {
       ...fields,
-      birthDate: new Date(`${fields.birthDate} 10:00:00`),
+      birthDate: fields.birthDate?.value,
       type: fields.type.value,
     };
 
@@ -171,7 +188,7 @@ export function UsersForm() {
             <GridItem xs={12} sm={6} md={6}>
               <CustomInput
                 id="cellPhone"
-                labelText="Telefone"
+                labelText="Telefone (opcional)"
                 formControlProps={{
                   fullWidth: true,
                 }}
@@ -184,18 +201,16 @@ export function UsersForm() {
             </GridItem>
 
             <GridItem xs={12} sm={6} md={6}>
-              <CustomInput
-                id="birthDate"
-                formControlProps={{
-                  fullWidth: true,
-                }}
-                inputProps={{
-                  type: "date",
-                  value: fields.birthDate,
-                  onChange: (event) =>
-                    setField("birthDate", event.target.value),
-                }}
+              <Select
+                options={optionsBirthDate}
+                placeholder="Mes de aniversáio (opcional)"
+                value={fields.birthDate}
+                onChange={(val) => setField("birthDate", val)}
               />
+              <span style={{ fontSize: 12, color: "red" }}>
+                {" "}
+                {!!errors?.birthDate && errorsMessage[errors.birthDate]}{" "}
+              </span>
             </GridItem>
 
             <GridItem xs={12} sm={6} md={6}>

@@ -72,7 +72,9 @@ export function SchedulesForm() {
   const { execute: updateById, status: statusUpdated } = useAsync(
     scheduleResource.updateById
   );
-  const { execute: findById, value } = useAsync(scheduleResource.findById);
+  const { execute: findById, value, status: statusFind } = useAsync(
+    scheduleResource.findById
+  );
 
   const { execute: revertById, status: statusRevert } = useAsync(
     scheduleResource.revert
@@ -105,15 +107,15 @@ export function SchedulesForm() {
     if (value) {
       setAllFields({
         user: value?.user ? { label: value.user.name, value: value.user } : {},
-        service: value?.service
-          ? { label: value.service.name, value: value.service }
+        service: value?.services.length
+          ? { label: value.services[0]?.name, value: value.services[0] }
           : {},
         employee: value?.employee
           ? { label: value.employee.name, value: value.employee }
           : {},
         date: format(new Date(value.scheduleAt), "yyyy-MM-dd"),
         time: format(new Date(value.scheduleAt), "HH:mm"),
-        isPackage: value.isPackage,
+        isPackage: value.services[0].ServiceSchedule.isPackage,
         discount: value.discount,
         addition: value.addition,
       });
@@ -125,6 +127,8 @@ export function SchedulesForm() {
 
     const validate = validateAllFields();
 
+    console.log(validate);
+
     if (!validate.isValid) {
       setErrors(validate.errors);
       return;
@@ -135,8 +139,8 @@ export function SchedulesForm() {
     const payload = {
       ...fields,
       userId: fields.user.value.id,
-      serviceId: fields.service.value.id,
       employeeId: fields.employee.value.id,
+      services: [{ id: fields.service.value.id, isPackage: fields.isPackage }],
       scheduleAt,
     };
 
@@ -155,7 +159,7 @@ export function SchedulesForm() {
 
   const isEditing = !!id;
 
-  if (isEditing && (!value?.user || !value?.service || !value?.employee)) {
+  if (statusFind === "pending") {
     return (
       <div>
         <h4>
@@ -209,7 +213,7 @@ export function SchedulesForm() {
                   placeholder="Pesquise um usuário"
                   defaultValue={
                     isEditing
-                      ? { label: value.user.name, value: value.user }
+                      ? { label: value?.user?.name, value: value?.user }
                       : null
                   }
                 />
@@ -225,7 +229,10 @@ export function SchedulesForm() {
                   placeholder="Pesquise um serviço"
                   defaultValue={
                     isEditing
-                      ? { label: value.service.name, value: value.service }
+                      ? {
+                          label: value?.services[0]?.name,
+                          value: value?.services[0],
+                        }
                       : null
                   }
                 />
@@ -241,7 +248,7 @@ export function SchedulesForm() {
                   placeholder="Pesquise um funcionário"
                   defaultValue={
                     isEditing
-                      ? { label: value.employee.name, value: value.employee }
+                      ? { label: value?.employee?.name, value: value?.employee }
                       : null
                   }
                 />

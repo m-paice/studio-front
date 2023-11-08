@@ -5,12 +5,6 @@ import GridItem from "../../components/Grid/GridItem";
 
 import GridContainer from "../../components/Grid/GridContainer";
 import CustomInput from "../../components/CustomInput/CustomInput";
-import { Select } from "../../components/CustomInput/Select";
-
-const options = [
-  { label: "Integral", value: "full" },
-  { label: "Parcial", value: "partial" },
-];
 
 export function Filters({ handleSetFilters }) {
   const handleChangeName = (event) => {
@@ -52,13 +46,6 @@ export function Filters({ handleSetFilters }) {
             type: "number",
             onChange: loadChangePrice,
           }}
-        />
-      </GridItem>
-
-      <GridItem xs={12} sm={3} md={3}>
-        <Select
-          options={options}
-          onChange={(value) => handleSetFilters("type", value)}
         />
       </GridItem>
     </GridContainer>

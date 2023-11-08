@@ -75,8 +75,8 @@ export function Users() {
   useEffect(() => {
     execute({
       where: {
-        ...(filters?.name && { name: { $like: `%${filters.name}%` } }),
-        ...(filters?.phone && { cellPhone: { $like: `%${filters.phone}%` } }),
+        ...(filters?.name && { name: { $iLike: `%${filters.name}%` } }),
+        ...(filters?.phone && { cellPhone: { $iLike: `%${filters.phone}%` } }),
       },
       ...(order && { order: [["name", "ASC"]] }),
     });
@@ -198,7 +198,7 @@ export function Users() {
                   item.name,
                   item.cellPhone,
                   item.type === "pf" ? "Cliente" : "Funcionário",
-                  format(new Date(item.birthDate), "dd / MMMM"),
+                  item.birthDate,
                   <div key={item.id}>
                     <Button
                       color="warning"

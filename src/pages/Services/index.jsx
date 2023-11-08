@@ -73,7 +73,7 @@ export function Services() {
   useEffect(() => {
     execute({
       where: {
-        ...(filters?.name && { name: { $like: `%${filters.name}%` } }),
+        ...(filters?.name && { name: { $iLike: `%${filters.name}%` } }),
         ...(filters?.type && { type: filters.type.value }),
         ...(filters?.price && { price: filters.price }),
       },
@@ -202,12 +202,10 @@ export function Services() {
             <>
               <Table
                 tableHeaderColor="info"
-                tableHead={["Nome", "Preço", "Tipo", "Produtos", "Ações"]}
+                tableHead={["Nome", "Preço", "Ações"]}
                 tableData={(value?.data || []).map((item) => [
                   item.name,
                   formatPrice(item.price),
-                  item.type === "full" ? "Integral" : "Parcial",
-                  item.products.length,
                   <div key={item.id}>
                     <Button
                       color="warning"

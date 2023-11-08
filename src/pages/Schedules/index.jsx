@@ -96,7 +96,7 @@ export function Schedules() {
 
   useEffect(() => {
     if (value) {
-      const response = value.reduce((acc, cur) => {
+      const response = value.data.reduce((acc, cur) => {
         const formatDate = format(new Date(cur.scheduleAt), "dd/MM/yyyy");
 
         return {
@@ -132,7 +132,9 @@ export function Schedules() {
 
   useEffect(() => {
     if (statusChanged === "success") {
-      execute();
+      execute({
+        perPage: 500,
+      });
     }
   }, [statusChanged]);
 
@@ -144,6 +146,7 @@ export function Schedules() {
         ...(filters?.service && { serviceId: filters.service.value.id }),
         ...(filters?.status && { status: filters.status.value }),
       },
+      perPage: 500,
     });
   }, [filters?.user, filters?.employee, filters?.status, filters?.service]);
 
@@ -187,50 +190,36 @@ export function Schedules() {
             style={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "flex-end",
+              justifyContent: "space-between",
             }}
           >
-            <GridItem xs={12} sm={12} md={12}>
-              <div
+            <div style={{ display: "flex", gap: 12 }}>
+              <p
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
+                  border: "1px solid #fff",
+                  borderRadius: 2,
+                  padding: "5px 15px",
+                  cursor: "pointer",
                 }}
+                onClick={() => setView("week")}
               >
-                <Button onClick={handleClearFilters}>
-                  {" "}
-                  {isOpenFilters ? "Fechar" : "Abrir"} filtros{" "}
-                </Button>
-              </div>
-            </GridItem>
-          </div>
-
-          <div style={{ display: "flex", gap: 12 }}>
-            <p
-              style={{
-                border: "1px solid #fff",
-                borderRadius: 2,
-                padding: "5px 15px",
-                cursor: "pointer",
-              }}
-              onClick={() => setView("week")}
-            >
-              {" "}
-              Semana{" "}
-            </p>
-            <p
-              style={{
-                border: "1px solid #fff",
-                borderRadius: 2,
-                padding: "5px 28px",
-                cursor: "pointer",
-              }}
-              onClick={() => setView("month")}
-            >
-              {" "}
-              Mês{" "}
-            </p>
+                Semana
+              </p>
+              <p
+                style={{
+                  border: "1px solid #fff",
+                  borderRadius: 2,
+                  padding: "5px 28px",
+                  cursor: "pointer",
+                }}
+                onClick={() => setView("month")}
+              >
+                Mês
+              </p>
+            </div>
+            <Button onClick={handleClearFilters}>
+              {isOpenFilters ? "Fechar" : "Abrir"} filtros
+            </Button>
           </div>
         </CardHeader>
 
@@ -238,14 +227,14 @@ export function Schedules() {
           {isOpenFilters && <Filters handleSetFilters={handleSetFilters} />}
 
           {view === "month" && (
-            <Month data={value} changeStatus={changeStatus} />
+            <Month data={value.data} changeStatus={changeStatus} />
           )}
 
           {view === "week" && (
             <>
               <GridContainer>
                 <GridItem>
-                  Visualizar semana{" "}
+                  Visualizar semana
                   <input
                     type="date"
                     onChange={(event) => setDate(new Date(event.target.value))}
@@ -268,9 +257,8 @@ export function Schedules() {
                       <div style={styles.content}>
                         <span> {item} </span>
                         <span>
-                          {" "}
                           {dateOfWeek.length &&
-                            format(dateOfWeek[index], "dd/MM")}{" "}
+                            format(dateOfWeek[index], "dd/MM")}
                         </span>
                         {dateOfWeek.length &&
                           data.hasOwnProperty(

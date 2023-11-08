@@ -35,7 +35,7 @@ export function ScheduleItem({ item, changeStatus }) {
             <span style={{ fontWeight: "bold" }}>
               {format(new Date(item.scheduleAt), "HH:mm")}{" "}
             </span>
-            {item.user.name}
+            {item?.user?.name}
           </div>
           <Edit
             style={{ cursor: "pointer", color: "#ff9800" }}
@@ -50,7 +50,7 @@ export function ScheduleItem({ item, changeStatus }) {
             justifyContent: "space-between",
           }}
         >
-          {item.service.name}
+          {item?.services.map((service) => service.name).join("; ")}
           <br />
           <span>
             status:{" "}

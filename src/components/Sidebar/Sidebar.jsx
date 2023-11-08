@@ -35,7 +35,7 @@ export default function Sidebar(props) {
   function handleFilterRoutes() {
     const superadmin = user.isSuperAdmin;
 
-    if (superadmin) {
+    if (!user.accountId && superadmin) {
       return routes.filter((item) => item.permission === "superadmin");
     }
 
@@ -111,15 +111,13 @@ export default function Sidebar(props) {
   );
   var brand = (
     <div className={classes.logo}>
-      <a
-        href=""
+      <span
         className={classNames(
           props.active ? classes.logoLinkSm : classes.logoLink
         )}
-        target="_blank"
       >
-        {"Studio Roane Rocha" || "Admin"}
-      </a>
+        {user?.account?.name || "Admin"}
+      </span>
     </div>
   );
 

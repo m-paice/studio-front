@@ -29,12 +29,18 @@ const customStyles = {
   }),
 };
 
-export function Select({ options, onChange, value, defaultValue }) {
+export function Select({
+  options,
+  onChange,
+  value,
+  defaultValue,
+  placeholder,
+}) {
   return (
     <div style={{ marginTop: 37, paddingBottom: 10 }}>
       <SelectInput
         styles={customStyles}
-        placeholder="Selecione um item"
+        placeholder={placeholder || "Selecione um item"}
         options={options}
         value={value}
         defaultValue={defaultValue}

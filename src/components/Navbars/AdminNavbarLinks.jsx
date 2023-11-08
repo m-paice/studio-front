@@ -63,7 +63,7 @@ export default function AdminNavbarLinks(props) {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: "10px 25px 30px",
+        padding: "10px 25px 0px",
       }}
     >
       <div

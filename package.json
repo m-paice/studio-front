@@ -1,8 +1,14 @@
 {
   "name": "front-studio",
-  "homepage": "/",
   "version": "1.10.0",
   "description": "front studio",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint --fix --ext .ts,.tsx ."
+  },
   "dependencies": {
     "@date-io/date-fns": "^2.16.0",
     "@headlessui/react": "^1.7.5",
@@ -37,12 +43,6 @@
     "remask": "^0.1.0-alpha.5",
     "styled-components": "^5.3.6",
     "vite": "^3.0.0"
-  },
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "lint": "eslint --fix --ext .ts,.tsx ."
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",

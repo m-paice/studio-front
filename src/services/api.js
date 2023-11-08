@@ -3,7 +3,7 @@ import qs from "qs";
 
 const nodeEnv = {
   development: "http://localhost:3333",
-  production: "http://204.48.31.168:3333",
+  production: "https://api.meupetrecho.com.br",
 };
 
 const token = () => localStorage.getItem("token");

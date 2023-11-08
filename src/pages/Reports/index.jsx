@@ -53,9 +53,6 @@ export function Reports() {
 
   const [fields, setField, setAllFields] = useForm(initialValues);
 
-  const [openDetailsEntry, handleToggleOpenDetailsEntry] = useToggle();
-  const [openDetailsOut, handleToggleOpenDetailsOut] = useToggle();
-
   const isSaleAccount = user?.account?.type === "sales";
 
   const handleSubmit = () => {
@@ -123,22 +120,6 @@ export function Reports() {
   useEffect(() => {
     if (statusDestroy === "success") handleLoadData();
   }, [statusDestroy]);
-
-  const handleRealPrice = (total = 0, discount = 0, addition = 0) => {
-    let subtotal = total;
-
-    if (discount) {
-      subtotal -= discount;
-    }
-
-    if (addition) {
-      subtotal += addition;
-    }
-
-    return subtotal;
-  };
-
-  const isSales = user?.account?.type === "sales";
 
   return (
     <div>
@@ -209,7 +190,7 @@ export function Reports() {
       <GridContainer>
         <GridItem xs={12} sm={6} md={6}>
           <GridContainer>
-            <GridItem xs={12} sm={isSales ? 12 : 6} md={isSales ? 12 : 6}>
+            <GridItem xs={12} sm={6} md={6}>
               {status === "pending" ? (
                 <div style={{ marginBottom: 60 }}>
                   <Skeleton lines={2} />
@@ -217,10 +198,7 @@ export function Reports() {
               ) : (
                 <Card>
                   <CardHeader color="success" stats icon>
-                    <CardIcon
-                      color="success"
-                      onClick={handleToggleOpenDetailsEntry}
-                    >
+                    <CardIcon color="success">
                       <MonetizationOn />
                     </CardIcon>
                     <p className={classes.cardCategory}>Entradas</p>
@@ -230,27 +208,12 @@ export function Reports() {
                   </CardHeader>
                   <CardFooter stats>
                     <div className={classes.stats}></div>
-
-                    {openDetailsEntry && (
-                      <Table
-                        tableHeaderColor="info"
-                        tableHead={["Serviço", "Valor"]}
-                        tableData={(value?.schedulesInfo || []).map((item) => [
-                          item.schedule.service.name,
-                          handleRealPrice(
-                            item.schedule.service.price,
-                            item.schedule.discount,
-                            item.schedule.addition
-                          ),
-                        ])}
-                      />
-                    )}
                   </CardFooter>
                 </Card>
               )}
             </GridItem>
 
-            <GridItem xs={12} sm={isSales ? 12 : 6} md={isSales ? 12 : 6}>
+            <GridItem xs={12} sm={6} md={6}>
               {status === "pending" ? (
                 <div style={{ marginBottom: 60 }}>
                   <Skeleton lines={2} />
@@ -258,10 +221,7 @@ export function Reports() {
               ) : (
                 <Card>
                   <CardHeader color="danger" stats icon>
-                    <CardIcon
-                      color="danger"
-                      onClick={handleToggleOpenDetailsOut}
-                    >
+                    <CardIcon color="danger">
                       <MonetizationOn />
                     </CardIcon>
                     <p className={classes.cardCategory}>Saídas</p>
@@ -271,176 +231,12 @@ export function Reports() {
                   </CardHeader>
                   <CardFooter stats>
                     <div className={classes.stats}></div>
-
-                    {openDetailsOut && (
-                      <Table
-                        tableHeaderColor="info"
-                        tableHead={["Descrição", "Valor", "Ação"]}
-                        tableData={(value?.registerInfo || [])
-                          .filter((item) => Boolean(item.description))
-                          .map((item) => [
-                            item.description,
-                            item.out,
-                            <Button
-                              key={item.id}
-                              color="danger"
-                              justIcon={window.innerWidth > 959}
-                              simple={!(window.innerWidth > 959)}
-                              aria-label="Dashboard"
-                              className={classes.buttonLink}
-                              onClick={() => handleDestroyById(item.id)}
-                            >
-                              <Delete className={classes.icons} />
-                            </Button>,
-                          ])}
-                      />
-                    )}
                   </CardFooter>
                 </Card>
               )}
             </GridItem>
           </GridContainer>
-
-          {user?.account?.type === "sales" ? null : (
-            <GridContainer>
-              <GridItem xs={12} sm={6} md={6}>
-                {status === "pending" ? (
-                  <div style={{ marginBottom: 60 }}>
-                    <Skeleton lines={2} />
-                  </div>
-                ) : (
-                  <Card>
-                    <CardHeader color="success" stats icon>
-                      <CardIcon color="success">
-                        <Schedule />
-                      </CardIcon>
-                      <p className={classes.cardCategory}>
-                        Agendamentos confirmados
-                      </p>
-                      <h3 className={classes.cardTitle}>
-                        {value?.countFinished || 0}
-                      </h3>
-                    </CardHeader>
-                    <CardFooter stats>
-                      <div className={classes.stats}></div>
-                    </CardFooter>
-                  </Card>
-                )}
-              </GridItem>
-
-              <GridItem xs={12} sm={6} md={6}>
-                {status === "pending" ? (
-                  <div style={{ marginBottom: 60 }}>
-                    <Skeleton lines={2} />
-                  </div>
-                ) : (
-                  <Card>
-                    <CardHeader color="danger" stats icon>
-                      <CardIcon color="danger">
-                        <Schedule />
-                      </CardIcon>
-                      <p className={classes.cardCategory}>
-                        Agendamentos cancelados
-                      </p>
-                      <h3 className={classes.cardTitle}>
-                        {value?.countCanceled || 0}
-                      </h3>
-                    </CardHeader>
-                    <CardFooter stats>
-                      <div className={classes.stats}></div>
-                    </CardFooter>
-                  </Card>
-                )}
-              </GridItem>
-            </GridContainer>
-          )}
-
-          {user?.account?.type === "sales" ? null : (
-            <GridContainer>
-              <GridItem xs={12} sm={6} md={6}>
-                {status === "pending" ? (
-                  <div style={{ marginBottom: 60 }}>
-                    <Skeleton lines={2} />
-                  </div>
-                ) : (
-                  <Card>
-                    <CardHeader color="info" stats icon>
-                      <CardIcon color="info">
-                        <AccountBox />
-                      </CardIcon>
-                      <p className={classes.cardCategory}>Novos clientes</p>
-                      <h3 className={classes.cardTitle}>
-                        {" "}
-                        {value?.countUsers || 0}
-                      </h3>
-                    </CardHeader>
-                    <CardFooter stats>
-                      <div className={classes.stats}></div>
-                    </CardFooter>
-                  </Card>
-                )}
-              </GridItem>
-
-              <GridItem xs={12} sm={6} md={6}>
-                {status === "pending" ? (
-                  <div style={{ marginBottom: 60 }}>
-                    <Skeleton lines={2} />
-                  </div>
-                ) : (
-                  <Card>
-                    <CardHeader color="info" stats icon>
-                      <CardIcon color="info">
-                        <MonetizationOn />
-                      </CardIcon>
-                      <p className={classes.cardCategory}>
-                        Sugestão compra de produtos
-                      </p>
-                      <h3 className={classes.cardTitle}>
-                        {" "}
-                        {formatPrice(value?.productPriceSugestion)}
-                      </h3>
-                    </CardHeader>
-                    <CardFooter stats>
-                      <div className={classes.stats}></div>
-                    </CardFooter>
-                  </Card>
-                )}
-              </GridItem>
-            </GridContainer>
-          )}
         </GridItem>
-
-        {user?.account?.type === "sales" ? null : (
-          <GridItem xs={12} sm={6} md={6}>
-            {status === "pending" ? (
-              <Skeleton lines={5} />
-            ) : (
-              <Card>
-                <CardHeader color="warning">
-                  <h4 className={classes.cardTitleWhite}>
-                    Serviços mais procurados
-                  </h4>
-                  <p className={classes.cardCategoryWhite}>
-                    acompanhe os serviços mais procuras
-                  </p>
-                </CardHeader>
-                <CardBody>
-                  <Table
-                    tableHeaderColor="warning"
-                    tableHead={["Posição", "Nome", "Quantidade"]}
-                    tableData={
-                      value?.serviceCount.map((item, index) => [
-                        index + 1,
-                        item.name,
-                        item.value,
-                      ]) || []
-                    }
-                  />
-                </CardBody>
-              </Card>
-            )}
-          </GridItem>
-        )}
       </GridContainer>
     </div>
   );
