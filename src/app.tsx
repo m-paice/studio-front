@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import routes, { subs } from "./routes";
 import Admin from "./layouts/Admin";
 import { LayoutLogin } from "./layouts/Login";
+import { PoliticaPrivacidade } from "./pages/PoliticaPrivacidade";
 
 import "./assets/css/material-dashboard-react.css";
 import { AuthContextProvider } from "./context/Auth";
@@ -13,6 +14,11 @@ export function App() {
   return (
     <BrowserRouter>
       <Switch>
+        <Route
+          exact
+          path="/politica-privacidade"
+          component={PoliticaPrivacidade}
+        />
         <AuthContextProvider>
           {/* <Redirect from="/" to="/login" /> */}
           <Route exact path="/" component={LayoutLogin} />
