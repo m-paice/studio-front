@@ -3,6 +3,7 @@ import MonetizationOn from "@material-ui/icons/MonetizationOn";
 import CalendarToday from "@material-ui/icons/CalendarToday";
 import Category from "@material-ui/icons/Category";
 import Person from "@material-ui/icons/Person";
+import LocalOffer from "@material-ui/icons/LocalOffer";
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
 import Store from "@material-ui/icons/Store";
 import BubbleChart from "@material-ui/icons/BubbleChart";
@@ -25,6 +26,7 @@ import { Accounts } from "./pages/Accounts";
 import { AccountsForm } from "./pages/Accounts/Form";
 import { UsersAdmin } from "./pages/UsersAdmin";
 import { UsersAdminForm } from "./pages/UsersAdmin/Form";
+import { Billigns } from "./pages/Billigns";
 import { Sales } from "./pages/Sales";
 import { SalesForm } from "./pages/Sales/Form";
 import { SalesView } from "./pages/Sales/View";
@@ -127,7 +129,6 @@ const dashboardRoutes = [
   {
     path: "/accounts",
     name: "Conta",
-    rtlName: "لوحة القيادة",
     icon: AccountBalance,
     component: Accounts,
     layout: "/accounts",
@@ -136,16 +137,22 @@ const dashboardRoutes = [
   {
     path: "/useradmin",
     name: "Usuários",
-    rtlName: "لوحة القيادة",
     icon: Person,
     component: UsersAdmin,
     layout: "/useradmin",
     permission: "superadmin",
   },
   {
+    path: "/billigns",
+    name: "Billings",
+    icon: LocalOffer,
+    component: Billigns,
+    layout: "/billigns",
+    permission: "superadmin",
+  },
+  {
     path: "/dashboard",
     name: "Dashboard",
-    rtlName: "لوحة القيادة",
     icon: Dashboard,
     component: DashboardPage,
     layout: "/dashboard",
@@ -154,7 +161,6 @@ const dashboardRoutes = [
   {
     path: "/reports",
     name: "Relatórios",
-    rtlName: "قائمة الجدول",
     icon: MonetizationOn,
     component: Reports,
     layout: "/reports",
@@ -163,7 +169,6 @@ const dashboardRoutes = [
   {
     path: "/schedules",
     name: "Agendamentos",
-    rtlName: "قائمة الجدول",
     icon: CalendarToday,
     component: Schedules,
     layout: "/schedules",
@@ -172,7 +177,6 @@ const dashboardRoutes = [
   {
     path: "/services",
     name: "Serviços",
-    rtlName: "طباعة",
     icon: LibraryBooks,
     component: Services,
     layout: "/services",
@@ -181,7 +185,6 @@ const dashboardRoutes = [
   {
     path: "/sales",
     name: "Vendas",
-    rtlName: "طباعة",
     icon: Store,
     component: Sales,
     layout: "/sales",
@@ -190,35 +193,14 @@ const dashboardRoutes = [
   {
     path: "/users",
     name: "Usuários",
-    rtlName: "ملف تعريفي للمستخدم",
     icon: Person,
     component: Users,
     layout: "/users",
     permission: "all",
   },
-  // {
-  //   path: "/products",
-  //   name: "Produtos",
-  //   rtlName: "الرموز",
-  //   icon: BubbleChart,
-  //   component: Products,
-  //   layout: "/products",
-  //   permission: "all",
-  // },
-  // {
-  //   path: "/categories",
-  //   name: "Categorias",
-  //   rtlName: "الرموز",
-  //   icon: Category,
-  //   component: Categories,
-  //   layout: "/categories",
-  //   permission: "all",
-  // },
-
   {
     path: "/profile",
     name: "Profile",
-    rtlName: "الرموز",
     icon: Category,
     component: Profile,
     layout: "/profile",
