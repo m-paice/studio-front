@@ -1,11 +1,10 @@
-import React from "react";
-
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import routes, { subs } from "./routes";
 import Admin from "./layouts/Admin";
 import { LayoutLogin } from "./layouts/Login";
 import { PoliticaPrivacidade } from "./pages/PoliticaPrivacidade";
+import { Confirmed } from "./pages/Confirmed";
 
 import "./assets/css/material-dashboard-react.css";
 import { AuthContextProvider } from "./context/Auth";
@@ -19,6 +18,7 @@ export function App() {
           path="/politica-privacidade"
           component={PoliticaPrivacidade}
         />
+        <Route exact path="/confirmacao" component={Confirmed} />
         <AuthContextProvider>
           {/* <Redirect from="/" to="/login" /> */}
           <Route exact path="/" component={LayoutLogin} />
